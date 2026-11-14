@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!--
+      Placeholder rough cut: one simple card per storyboard frame, at storyboard timings.
+      Cards are built from "film parts.js". The build script cuts each part's placeholder
+      out of this render until that part has its own render.
+      Render (from this folder): & "..\..\hyperframes\node_modules\.bin\hyperframes.cmd" render -q draft -o "..\renders\rough cut placeholders.mp4"
+    -->
+    <script src="film parts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --stage: #05080c; --ink: #f2f6fa; --ink-2: #9fb0c2; --ink-3: #5d6b7a;
+        --p1: #5b8cff; --p2: #a77bff; --eye: #5cc8ff;
+        --glass: rgba(12, 18, 26, 0.78); --glass-line: rgba(160, 190, 220, 0.16);
+        --font: "Inter", sans-serif; --mono: "JetBrains Mono", monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--stage); font-family: var(--font); color: var(--ink); -webkit-font-smoothing: antialiased; }
+      #root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 80% 70% at 50% 45%, #0c1218 0%, var(--stage) 70%); }
+      .card { position: absolute; inset: 0; opacity: 0; }
+      .num { position: absolute; right: 96px; top: 40px; font-size: 300px; font-weight: 800; color: rgba(160,190,220,0.07); letter-spacing: -0.04em; line-height: 1; }
+      .eyebrow { position: absolute; left: 120px; top: 150px; font-size: 30px; font-weight: 700; letter-spacing: 0.18em; color: var(--ink-2); }
+      .eyebrow.p1 { color: var(--p1); } .eyebrow.p2 { color: var(--p2); }
+      .title { position: absolute; left: 120px; top: 200px; width: 1500px; font-size: 68px; font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; }
+      .beats { position: absolute; left: 120px; top: 470px; width: 1400px; list-style: none; }
+      .beats li { font-size: 38px; line-height: 1.3; color: var(--ink-2); margin-bottom: 26px; padding-left: 46px; position: relative; opacity: 0; }
+      .beats li::before { content: ""; position: absolute; left: 0; top: 18px; width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--eye); }
+      .beats li.on { color: var(--ink); }
+      .meta { position: absolute; left: 120px; bottom: 88px; display: flex; gap: 18px; }
+      .pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 999px; border: 1px solid var(--glass-line); background: var(--glass); font-size: 28px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+      .pill.ph { color: #ffc53d; border-color: rgba(255,197,61,0.4); letter-spacing: 0.12em; }
+      .bar { position: absolute; left: 0; bottom: 0; height: 8px; width: 1920px; background: var(--eye); transform-origin: 0 50%; transform: scaleX(0); opacity: 0.8; }
+      #clock { position: absolute; left: 120px; top: 72px; font-family: var(--mono); font-size: 34px; font-weight: 700; color: var(--ink-2); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="206" data-width="1920" data-height="1080">
+      <div id="cards" class="clip" data-start="0" data-duration="206" data-track-index="0" style="position:absolute;inset:0" data-layout-allow-overlap></div>
+      <div id="clock-layer" class="clip" data-start="0" data-duration="206" data-track-index="1" style="position:absolute;inset:0"><div id="clock">0:00</div></div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const host = document.getElementById("cards");
+      const fmt = (s) => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+      let partStart = 0;
+      for (const part of FILM_PARTS) {
+        let partLen = 0; // storyboard timing: frames back to back by "dur" ("at" is for part renders)
+        for (const f of part.frames) {
+          const t0 = partStart + partLen;
+          partLen += f.dur;
+          const cls = f.eyebrow.startsWith("P1") ? "p1" : f.eyebrow.startsWith("P2") ? "p2" : "";
+          const el = document.createElement("div");
+          el.className = "card";
+          el.innerHTML =
+            `<div class="num">${f.id}</div>` +
+            `<div class="eyebrow ${cls}">${f.eyebrow}</div>` +
+            `<div class="title">${f.title}</div>` +
+            `<ul class="beats">${f.beats.map((b) => `<li>${b}</li>`).join("")}</ul>` +
+            `<div class="meta"><span class="pill ph">PLACEHOLDER</span><span class="pill">Frame ${f.id} · ${f.name}</span>` +
+            `<span class="pill">Part ${part.id} · ${part.name}</span><span class="pill">${f.look}</span></div>` +
+            `<div class="bar"></div>`;
+          host.appendChild(el);
+          tl.set(el, { opacity: 1 }, t0);
+          tl.set(el, { opacity: 0 }, t0 + f.dur);
+          tl.fromTo(el.querySelector(".title"), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 0.1);
+          tl.fromTo(el.querySelector(".bar"), { scaleX: 0 }, { scaleX: 1, duration: f.dur, ease: "none" }, t0);
+          const lis = el.querySelectorAll(".beats li");
+          const step = Math.max(0.8, (f.dur - 1.2) / lis.length);
+          lis.forEach((li, i) => {
+            tl.fromTo(li, { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.35, ease: "power2.out" }, t0 + 0.6 + i * step);
+          });
+        }
+        partStart += partLen;
+      }
+      const c = { t: 0 };
+      const clock = document.getElementById("clock");
+      tl.to(c, { t: partStart, duration: partStart, ease: "none", onUpdate: () => { clock.textContent = fmt(c.t); } }, 0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+{
+  "name": "video-generation-engine-learning-set",
+  "version": "1.0.0",
+  "created": "2026-11-14",
+  "owner": "Aman Mishra",
+  "purpose": "Reference material for a video generation engine that turns source conversations and production constraints into coherent consulting films.",
+  "projects": [
+    {
+      "id": "nashoba-bakery",
+      "kind": "finished-reference",
+      "resources": [
+        {
+          "path": "sources/nashoba-bakery/transcript.md",
+          "role": "source-transcript",
+          "notes": "Automated transcript of two recordings. Speaker identities are not verified and timestamps restart for each recording."
+        },
+        {
+          "path": "outputs/nashoba-bakery/Shiftwork-for-John.mp4",
+          "role": "finished-film",
+          "notes": "Generated reference film. Use for visual and narrative pattern extraction, not as a source of factual claims."
+        }
+      ],
+      "learnable_patterns": [
+        "consulting-style visual explanation",
+        "action titles",
+        "founder-led narrative",
+        "formula and takeaway cards",
+        "process explanation from a plant visit"
+      ]
+    },
+    {
+      "id": "concord-foods",
+      "kind": "production-case-study",
+      "resources": [
+        {"path": "sources/concord-foods/story/film-brief.md", "role": "approved-storyboard"},
+        {"path": "sources/concord-foods/story/narration-script.md", "role": "voiceover-contract"},
+        {"path": "sources/concord-foods/workflow/visual-system.md", "role": "visual-style-system"},
+        {"path": "sources/concord-foods/workflow/film-plan.md", "role": "production-workflow"},
+        {"path": "sources/concord-foods/composition/frames-01-03/index.html", "role": "editable-scene"},
+        {"path": "sources/concord-foods/composition/frames-01-03/lib/opening.js", "role": "scene-timeline-and-render-logic"},
+        {"path": "sources/concord-foods/composition/rough-cut/film parts.js", "role": "assembly-plan"},
+        {"path": "sources/concord-foods/shared/factory-model.js", "role": "reusable-3d-scene-model"},
+        {"path": "outputs/concord-foods/rough cut.mp4", "role": "current-assembled-output"},
+        {"path": "outputs/concord-foods/part A cold open.mp4", "role": "approved-part-render"}
+      ],
+      "learnable_patterns": [
+        "story constraints before rendering",
+        "real-floor and digital-twin visual modes",
+        "status-color semantics",
+        "single source of truth for timing",
+        "review checkpoints",
+        "placeholder-based assembly",
+        "reusable 3D assets",
+        "claim and uncertainty boundaries"
+      ]
+    }
+  ],
+  "labels": {
+    "fact": "directly sourced or observed",
+    "illustrative": "authored for the film and not a customer measurement",
+    "proposed": "a product or story proposal, not a confirmed plant detail",
+    "unverified": "requires confirmation before being presented as fact"
+  }
+}

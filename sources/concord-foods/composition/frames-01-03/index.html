@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <!--
+      Part A. Frame 1 cold open, "Today". 0:00-0:20, silent. Real floor, real machine colours,
+      no status colours, no product on screen. One 3D scene with separate startup and production moments (lib/opening.js).
+      Every beat time lives in window.BEATS below. lib/opening.js and the GSAP timeline both
+      read it, so Step 9 retiming is a number change here (plus the clip windows noted in notes.md).
+      All event data is illustrative (film brief ledger: J-017, E-014, 08:42:10-08:43:04, 54 s).
+    -->
+    <script>
+      window.BEATS = {
+        startup: 0,
+        startupPan: 2.1,
+        product: 4.4,
+        supplyPress: 4.78,
+        supplyStart: 5.05,
+        startupReturn: 5.28,
+        startupReturnEnd: 7.0,
+        production: 6.0,
+        f01: 6.0,
+        push: 8.1,
+        lean: 8.8,
+        tip: 9.2,
+        land: 9.43,
+        react: 9.40,
+        stopReach: 10.90,
+        stop: 11.18,
+        said: 11.30,
+        ff: 11.38,
+        return: 11.45,
+        reach: 12.95,
+        upright: 13.12,
+        repairEnd: 13.75,
+        startWalk: 13.85,
+        startReach: 15.35,
+        startTouch: 15.65,
+        resume: 15.75,
+        fixed: 16.0,
+        pull: 16.7,
+        relabel: 17.75,
+        end: 20.0
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ink: #ffffff;
+        --ink-2: #e8e2d8;
+        --font: "Inter", sans-serif;
+        --mono: "JetBrains Mono", monospace;
+        --shadow: 0 2px 14px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.5);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: #4a453d; font-family: var(--font); color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+      }
+      #root { position: relative; width: 100%; height: 100%; background: #4a453d; }
+      #floor-canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; z-index: 1; }
+      .layer { position: absolute; inset: 0; pointer-events: none; }
+      /* Light top and bottom gradients so plain white type reads on the bright floor. */
+      #scrim {
+        background:
+          linear-gradient(to bottom, rgba(20,16,12,0.55) 0%, rgba(20,16,12,0) 22%),
+          linear-gradient(to top, rgba(20,16,12,0.6) 0%, rgba(20,16,12,0) 30%),
+          radial-gradient(ellipse 80% 75% at 50% 50%, rgba(0,0,0,0) 60%, rgba(18,14,10,0.4) 100%);
+      }
+      #today { position: absolute; left: 80px; top: 64px; font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; text-shadow: var(--shadow); }
+      #stamp { position: absolute; right: 80px; top: 60px; display: flex; align-items: baseline; gap: 18px; font-family: var(--mono); font-size: 38px; font-weight: 700; text-shadow: var(--shadow); }
+      #ff { font-size: 26px; letter-spacing: -0.12em; }
+      .cap { position: absolute; left: 80px; bottom: 92px; font-size: 64px; font-weight: 700; letter-spacing: -0.015em; white-space: nowrap; text-shadow: var(--shadow); }
+      /* Printed name labels with strong neutral contrast and leaders to the equipment. */
+      .anchor { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+      .mname { position: absolute; left: 0; bottom: 0; display: flex; align-items: center; }
+      .mname b { font-size: 34px; line-height: 1.15; font-weight: 700; white-space: nowrap; color: #17272e; background: #f4f0e5; border: 1px solid #b6b3a8; padding: 7px 13px; border-radius: 4px; text-shadow: none; }
+      #leaders { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+      #leaders line { stroke: #25363c; stroke-width: 2; }
+      .supply-marker { position: absolute; width: 100px; height: 118px; transform: translate(-50%, -100%); text-align: center; }
+      .supply-marker svg { display: block; width: 100px; height: 88px; }
+      .supply-marker b { display: inline-block; padding: 3px 9px; background: #252820; color: #fff4cf; font-size: 28px; line-height: 1; border-radius: 3px; }
+      #tag {
+        position: absolute; right: 80px; bottom: 82px;
+        font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+        color: var(--ink-2); padding: 8px 15px; border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.28); background: rgba(20,16,12,0.35); text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1920" data-height="1080">
+
+      <!-- The real floor, drawn every frame by lib/opening.js from timeline time -->
+      <canvas id="floor-canvas" data-layout-allow-overflow class="clip" data-start="0" data-duration="20" data-track-index="0" data-track-kind="graphics" width="1920" height="1080"></canvas>
+
+      <div id="scrim" class="layer clip" data-start="0" data-duration="20" data-track-index="1" data-track-kind="graphics" style="z-index:2"></div>
+
+      <!-- "Today" tag and the ILFA-2 clock -->
+      <div id="hdr" class="layer clip" data-start="0" data-duration="20" data-track-index="2" data-track-kind="graphics" style="z-index:3" data-layout-allow-overlap>
+        <div id="today">At startup</div>
+        <div id="stamp"><span>ILFA-2 · <span id="clock">08:42:05</span></span><span id="ff">&#9654;&#9654;</span></div>
+      </div>
+
+      <!-- Machine names on the opening and closing wide shots -->
+      <div id="names" class="layer clip" data-start="0" data-duration="20" data-track-index="4" data-track-kind="graphics" style="z-index:3" data-layout-allow-overlap data-layout-allow-overflow>
+        <svg id="leaders" viewBox="0 0 1920 1080" data-layout-ignore aria-hidden="true"><line id="line-cs3"/><line id="line-cs5"/><line id="line-buffer"/><line id="line-feed"/><line id="line-filler"/><line id="line-capper"/><line id="line-cool"/><line id="line-pack"/></svg>
+        <div class="anchor" id="a-cs3"><div class="mname"><b>CS3</b></div></div>
+        <div class="anchor" id="a-cs5"><div class="mname"><b>CS5</b></div></div>
+        <div class="anchor" id="a-buffer"><div class="mname"><b>Transfer tank</b></div></div>
+        <div class="anchor" id="a-feed"><div class="mname"><b>Empty jugs in</b></div></div>
+        <div class="anchor" id="a-filler"><div class="mname"><b>ILFA-2 filler</b></div></div>
+        <div class="anchor" id="a-capper"><div class="mname"><b>Capper</b></div></div>
+        <div class="anchor" id="a-cool"><div class="mname"><b>Cooling tunnel</b></div></div>
+        <div class="anchor" id="a-pack"><div class="mname"><b>Case packer</b></div></div>
+      </div>
+
+      <!-- Illustrative supply-wait cues requested for the cooking camera view. -->
+      <div id="cooking-cues" class="layer clip" data-start="0" data-duration="20" data-track-index="4" data-track-kind="graphics" style="z-index:4" data-layout-allow-overlap>
+        <div id="wait-cs3" class="supply-marker"><svg viewBox="0 0 100 88" aria-label="Cooking supply waiting"><path d="M50 5 L95 81 H5 Z" fill="#ffd34e" stroke="#252820" stroke-width="5" stroke-linejoin="round"/><path d="M50 30 V53" stroke="#252820" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="67" r="4.5" fill="#252820"/></svg><b>CS3</b></div>
+        <div id="wait-cs5" class="supply-marker"><svg viewBox="0 0 100 88" aria-label="Cooking supply waiting"><path d="M50 5 L95 81 H5 Z" fill="#ffd34e" stroke="#252820" stroke-width="5" stroke-linejoin="round"/><path d="M50 30 V53" stroke="#252820" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="67" r="4.5" fill="#252820"/></svg><b>CS5</b></div>
+      </div>
+
+      <!-- Captions -->
+      <div id="caps" class="layer clip" data-start="0" data-duration="20" data-track-index="3" data-track-kind="graphics" style="z-index:4" data-layout-allow-overlap>
+        <div class="cap" id="cap-wait">Waiting for cooking supply.</div>
+        <div class="cap" id="cap-cooking">Product not ready.</div>
+        <div class="cap" id="cap-supply">Product arrived.</div>
+        <div class="cap" id="cap-tip">Jug tipped.</div>
+        <div class="cap" id="cap-stop">Stopped at the HMI.</div>
+        <div class="cap" id="cap-fixed">Fixed. 54 s.</div>
+      </div>
+
+      <div id="tag-layer" class="layer clip" data-start="0" data-duration="20" data-track-index="5" data-track-kind="graphics" style="z-index:5" data-layout-allow-overlap>
+        <div id="tag">Illustrative</div>
+      </div>
+    </div>
+
+    <script>
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady.floor = new Promise((r) => (window.__floorReady = r));
+
+      const B = window.BEATS;
+      const tl = gsap.timeline({ paused: true });
+      // Named beats for Step 9 retiming.
+      for (const [name, t] of Object.entries(B)) tl.addLabel(name, t);
+
+      tl.fromTo("#today", {opacity:0,y:-12}, {opacity:1,y:0,duration:.5,ease:"power3.out"}, .2);
+      tl.to("#today", {opacity:0,duration:.2}, B.production-.3);
+      tl.fromTo("#cap-wait", {opacity:0,y:26}, {opacity:1,y:0,duration:.4,ease:"power3.out"}, .4);
+      tl.to("#cap-wait", {opacity:0,y:-14,duration:.18}, B.startupPan);
+      tl.fromTo("#cap-cooking", {opacity:0,y:18}, {opacity:1,y:0,duration:.25,ease:"power2.out"}, B.startupPan+.18);
+      tl.to("#cap-cooking", {opacity:0,y:-14,duration:.2}, B.product-.2);
+      tl.fromTo(".supply-marker", {opacity:0}, {opacity:1,duration:.22}, B.startupPan+.18);
+      tl.to(".supply-marker", {opacity:0,duration:.18}, B.product-.18);
+      tl.fromTo("#cap-supply", {opacity:0,y:26}, {opacity:1,y:0,duration:.3,ease:"power3.out"}, B.product);
+      tl.to("#cap-supply", {opacity:0,y:-14,duration:.25}, B.production+.25);
+      tl.fromTo("#today", { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, B.f01 + 0.2);
+      tl.fromTo("#stamp", { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, B.f01 + 0.35);
+      // "Today" labels the opening; it leaves when the first caption arrives, so two lines at most.
+      tl.to("#today", { opacity: 0, duration: 0.4, ease: "power1.in" }, B.said - 0.1);
+      // The clock pulses once as it lands on 08:42:10.
+      tl.fromTo("#stamp", { scale: 1 }, { scale: 1.08, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1, transformOrigin: "100% 50%" }, B.stop);
+      // Fast-forward marker while the clock runs through the stop.
+      tl.fromTo("#ff", { opacity: 0 }, { opacity: 1, duration: 0.2 }, B.ff);
+      tl.to("#ff", { opacity: 0, duration: 0.2 }, B.resume);
+
+      // Captions describe the illustrated manual stop, rather than an automatic jam stop.
+      tl.fromTo("#cap-tip", {opacity:0,y:26}, {opacity:1,y:0,duration:.3,ease:"power3.out"}, B.tip+.15);
+      tl.to("#cap-tip", {opacity:0,y:-14,duration:.2}, B.stop-.1);
+      tl.fromTo("#cap-stop", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, B.said);
+      tl.to("#cap-stop", { opacity: 0, y: -14, duration: 0.3, ease: "power2.in" }, B.repairEnd-.15);
+      tl.fromTo("#cap-fixed", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, B.fixed);
+      tl.to("#cap-fixed", { opacity: 0, duration: 0.5 }, B.end - 1.0);
+
+      // Machine names arrive one by one along the line, leave before the push, return on the closing wide.
+      gsap.set(".mname", { xPercent: -50 });
+      const NAMES = ["#a-cs3 .mname", "#a-cs5 .mname", "#a-buffer .mname", "#a-feed .mname", "#a-filler .mname", "#a-capper .mname", "#a-cool .mname", "#a-pack .mname"];
+      NAMES.forEach((id, i) => {
+        tl.fromTo(id, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, B.f01 + 0.15);
+        tl.to(id, { opacity: 0, duration: 0.3, ease: "power1.in" }, B.push - 0.1);
+        tl.to(id, { opacity: 1, duration: 0.25, ease: "power2.out" }, B.relabel);
+      });
+
+      tl.fromTo("#tag", { opacity: 0 }, { opacity: 1, duration: 0.5 }, B.startup + 0.2);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+    <script type="module" src="lib/opening.js"></script>
+  </body>
+</html>
