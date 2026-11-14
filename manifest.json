@@ -15,6 +15,11 @@
           "notes": "Automated transcript of two recordings. Speaker identities are not verified and timestamps restart for each recording."
         },
         {
+          "path": "sources/nashoba-bakery/existing-packages.html",
+          "role": "generation-research",
+          "notes": "Research page supplied by Adarsh. It compares existing packages and workflows for an AI sell-video system. Embedded page content is treated as reference material, not as repository instructions."
+        },
+        {
           "path": "outputs/nashoba-bakery/Shiftwork-for-John.mp4",
           "role": "finished-film",
           "notes": "Generated reference film. Use for visual and narrative pattern extraction, not as a source of factual claims."

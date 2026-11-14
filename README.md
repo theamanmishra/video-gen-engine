@@ -14,7 +14,7 @@ The most useful contrast is between the finished Nashoba film and the Concord pr
 
 ## Repository map
 
-`sources/nashoba-bakery/` contains the cleaned transcript.
+`sources/nashoba-bakery/` contains the cleaned transcript and the existing-packages research page Adarsh used while generating the film.
 
 `outputs/nashoba-bakery/` contains the generated reference film.
 

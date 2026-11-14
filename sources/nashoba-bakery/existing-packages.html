@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video System Packages</title>
+<style>
+  :root {
+    --ground: #ECEADB;
+    --ink: #2B1600;
+    --gold: #8C6A2E;
+    --paper: #F6F4EA;
+    --line: #CFC8B0;
+    --muted: #5E4A2E;
+    --ok: #3F5A2A;
+    --warn: #8A3B12;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; }
+  h2 { font-size: 22px; margin: 44px 0 10px; padding-top: 10px; border-top: 2px solid var(--gold); }
+  h3 { font-size: 18px; margin: 26px 0 8px; }
+  h4 { font-size: 16px; margin: 18px 0 6px; }
+  p { margin: 8px 0; }
+  a { color: var(--gold); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  sup a { text-decoration: none; font-weight: 600; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
+  .meta { font-size: 13px; color: var(--muted); }
+  nav.toc { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 18px 0; font-size: 15px; }
+  nav.toc ol { margin: 4px 0; padding-left: 20px; }
+  .summary { background: var(--paper); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 14px 18px; }
+  .summary li { margin: 8px 0; }
+  .tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 10px 0 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { background: #E2DDC8; font-weight: 650; position: sticky; top: 0; }
+  tr:last-child td { border-bottom: 0; }
+  td.c, th.c { white-space: nowrap; }
+  .wide table { min-width: 980px; }
+  .mid table { min-width: 760px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 650; padding: 1px 7px; border-radius: 10px; border: 1px solid currentColor; white-space: nowrap; }
+  .adopt { color: var(--ok); }
+  .trial { color: var(--gold); }
+  .borrow { color: #5B4A8A; }
+  .skip { color: var(--warn); }
+  .flag { color: var(--warn); font-weight: 600; }
+  details { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; margin: 12px 0; }
+  details > summary { cursor: pointer; padding: 12px 16px; font-weight: 650; font-size: 17px; list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary::before { content: "+ "; color: var(--gold); font-weight: 700; }
+  details[open] > summary::before { content: "\2212  "; }
+  details .body { padding: 0 16px 14px; }
+  .gate { border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+  .gate h4 { margin-top: 0; }
+  .gate .who { font-size: 13px; color: var(--muted); }
+  ol.sources { font-size: 13px; padding-left: 28px; }
+  ol.sources li { margin: 3px 0; word-break: break-word; }
+  ol.sources li:target { background: #E6D9B5; }
+  .note { font-size: 14px; color: var(--muted); }
+  figure { margin: 14px 0; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  svg text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  ul.tight li { margin: 4px 0; }
+  @media (max-width: 600px) {
+    h1 { font-size: 24px; }
+    h2 { font-size: 20px; }
+    table { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Existing packages for an AI sell-video system</h1>
+<p class="sub">What already exists that we can assemble around HyperFrames and Claude Code / Codex, with human checkpoints. Research as of 14 Nov 2026. Star counts and dates were read from the project pages on that day.</p>
+
+<nav class="toc">
+  <strong>On this page</strong>
+  <ol>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#map">Component map</a></li>
+    <li><a href="#stack">Recommended starter stack</a></li>
+    <li><a href="#gates">Proposed human checkpoints and feedback write-back</a></li>
+    <li><a href="#deep">Deep dives by layer</a> (skills and MCP, frameworks, agentic pipelines, story, direction, voice, sound, visuals, orchestration)</li>
+    <li><a href="#sources">Sources</a></li>
+  </ol>
+</nav>
+
+<!-- ============ 1. SUMMARY ============ -->
+<h2 id="summary">1. Summary</h2>
+<div class="summary">
+<ul>
+  <li><strong>We already have the strongest piece.</strong> HyperFrames and its skills cover authoring, a single quality gate (<code>check --json</code>: lint, runtime errors, layout, contrast), frame snapshots for review, timeline edits, undo history, and local tools for voice, transcription, background removal and colour grading.<sup><a href="#s1">1</a>,<a href="#s2">2</a>,<a href="#s3">3</a></sup> It is Apache-2.0 and very active (84.3k stars).<sup><a href="#s1">1</a></sup></li>
+  <li><strong>The closest thing to our end state is OpenMontage.</strong> It runs inside Claude Code or Codex, goes research → proposal → script → scene plan → assets → edit → compose, and enforces human sign-off at proposal, script, scene plan, assets and publish. It also runs a self-review after every render and can use HyperFrames as its renderer.<sup><a href="#s7">7</a></sup> It does not write lessons back into its skills.<sup><a href="#s7">7</a></sup> Best use: copy its gate design and reviewer checks rather than run the whole system.</li>
+  <li><strong>Feedback-to-skill learning has tools, but no finished product.</strong> Anthropic's <code>skill-creator</code> gives a draft → test → human review → improve loop with a review viewer that saves feedback to a file.<sup><a href="#s10">10</a></sup> Community "self-improvement" skills log lessons to a file and promote them into skills only after review.<sup><a href="#s81">81</a></sup> We still have to connect the two.</li>
+  <li><strong>Our voice approach is already the right one.</strong> Record the founder first, clean locally (DeepFilterNet, MIT/Apache)<sup><a href="#s57">57</a></sup>, cut fillers from word timestamps (<code>hyperframes transcribe</code>)<sup><a href="#s2">2</a></sup>, and use <strong>Rhubarb Lip Sync</strong> to drive the cartoon founders' mouths from the recording.<sup><a href="#s60">60</a></sup> Keep cloning (Qwen3-TTS locally, Apache-2.0)<sup><a href="#s46">46</a></sup> for small pickups only.</li>
+  <li><strong>The research pipelines are not usable for us.</strong> Paper2Video, Code2Video, TheoremExplainAgent, ViMax, MovieAgent and VideoAgent are academic, mostly have no human checkpoints, and either need large GPUs or depend on generated video.<sup><a href="#s28">28</a>–<a href="#s34">34</a></sup> Two ideas are worth taking: Code2Video's planner → coder → critic split, and the render-then-look loop.</li>
+  <li><strong>Biggest gap: argument quality.</strong> No package checks that each claim in a sell script is needed, proven, and traced to the call transcript. We will write this skill ourselves. It can draw on the Toulmin model and Minto's pyramid.<sup><a href="#s42">42</a>,<a href="#s38">38</a></sup></li>
+  <li><strong>Other gaps no package fills:</strong> a check that drawings are physically plausible to an expert viewer, a check that the script sounds like the founder, and a reliable automatic pacing critic. Gemini can review a whole cut, but its timestamps are only accurate to the second and it is a cloud service.<sup><a href="#s44">44</a></sup></li>
+  <li><strong>Things to avoid:</strong> generated photoreal video for the main story (our first video showed that fake realism hurts trust, and more than half of consumers want AI video disclosed<sup><a href="#s79">79</a></sup>). Also avoid Sora (its API shut down on 24 Sep 2026)<sup><a href="#s77">77</a></sup>, Chatterbox (retired Aug 2026)<sup><a href="#s47">47</a></sup>, and models whose weights are non-commercial: F5-TTS, MMAudio, CrisperWhisper, and BRIA RMBG, which is rembg's default model.<sup><a href="#s48">48</a>,<a href="#s66">66</a>,<a href="#s55">55</a>,<a href="#s74">74</a></sup></li>
+</ul>
+</div>
+
+<!-- ============ 2. COMPONENT MAP ============ -->
+<h2 id="map">2. Component map</h2>
+<p class="note">Rows follow the founder's framework. "Fit" means how Claude Code or Codex uses the option: a native skill, MCP, a CLI the agent runs, or an API only. "Local" means the media and data stay on our machine (Claude Code itself is a cloud service in every case).</p>
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Component</th><th>Best existing option(s)</th><th>Alternative</th><th>Fit with Claude Code</th><th>Local / cloud</th><th>Maturity</th></tr></thead>
+<tbody>
+<tr><td><strong>Objective / audience intake</strong></td><td>No dedicated package. Copy OpenMontage's "proposal" stage and gate<sup><a href="#s7">7</a></sup> into our own brief skill built from the framework notes.</td><td><code>brainstorming</code> skill (structured questioning)<sup><a href="#s11">11</a></sup></td><td>Skill</td><td>Local files</td><td>OpenMontage: 80.5k stars, AGPL-3.0<sup><a href="#s7">7</a></sup></td></tr>
+<tr><td><strong>Research → argument</strong></td><td><span class="flag">Gap.</span> Own "claims ledger" skill using Toulmin (argument-mapping skill)<sup><a href="#s42">42</a></sup> and Minto / SCQA<sup><a href="#s38">38</a></sup></td><td>Loki (OpenFactVerification) for public facts<sup><a href="#s41">41</a></sup></td><td>Skill; Loki is a Python library</td><td>Skill: local. Loki: needs OpenAI and Serper keys<sup><a href="#s41">41</a></sup></td><td>Loki: MIT, COLING 2025 demo paper<sup><a href="#s41">41</a></sup></td></tr>
+<tr><td><strong>Structure</strong></td><td>Practitioner frameworks written into a skill: Raskin's strategic narrative<sup><a href="#s36">36</a></sup>, Great Demo "do the last thing first"<sup><a href="#s37">37</a></sup>, explainer order hook → problem → solution → how → ask<sup><a href="#s35">35</a></sup></td><td>SCQA opening<sup><a href="#s38">38</a></sup></td><td>Skill (text)</td><td>Local</td><td>Long-established practice</td></tr>
+<tr><td><strong>Screenwriting / storyboard</strong></td><td>OpenMontage script + scene-plan stages<sup><a href="#s7">7</a></sup>; storyboard frames via <code>hyperframes snapshot</code><sup><a href="#s2">2</a></sup></td><td>Code2Video planner → coder → critic pattern<sup><a href="#s29">29</a></sup>; community story-critic skills<sup><a href="#s43">43</a></sup></td><td>Skill + CLI</td><td>Local</td><td>Code2Video: 2.4k stars, MIT, ICML 2026<sup><a href="#s29">29</a></sup></td></tr>
+<tr><td><strong>Direction / pacing</strong></td><td><code>hyperframes snapshot</code>, <code>keyframes</code>, <code>timeline</code><sup><a href="#s2">2</a></sup> + Wistia retention data as rules<sup><a href="#s39">39</a></sup></td><td>Gemini video understanding for whole-cut notes<sup><a href="#s44">44</a></sup></td><td>CLI; Gemini is API only</td><td>HyperFrames local; Gemini cloud</td><td>Gemini timestamps accurate to the second only<sup><a href="#s44">44</a></sup></td></tr>
+<tr><td><strong>Visual identity</strong></td><td>Dembrandt: pulls colours, fonts and logo from a client's website into tokens<sup><a href="#s73">73</a></sup>; HyperFrames <code>style-sampling</code> and registry<sup><a href="#s1">1</a></sup></td><td><code>theme-factory</code> / <code>brand-guidelines</code> skills<sup><a href="#s9">9</a></sup>; HyperFrames Figma skill<sup><a href="#s1">1</a></sup></td><td>CLI + skill (Dembrandt ships a Claude skill)<sup><a href="#s73">73</a></sup></td><td>Local</td><td>Dembrandt: MIT, about 2.1k stars (third-party count)<sup><a href="#s73">73</a></sup></td></tr>
+<tr><td><strong>Animation</strong></td><td>HyperFrames (HTML + GSAP; also Lottie, Three.js adapters)<sup><a href="#s1">1</a></sup> + about 450 registry blocks<sup><a href="#s85">85</a></sup></td><td>Remotion (React) with 13 official skills<sup><a href="#s4">4</a></sup></td><td>Native skills</td><td>Local render</td><td>HyperFrames 84.3k stars, Apache-2.0<sup><a href="#s1">1</a></sup>; Remotion 73.2k, source-available<sup><a href="#s6">6</a></sup></td></tr>
+<tr><td><strong>Voice</strong></td><td>Founder's own recording → DeepFilterNet cleanup<sup><a href="#s57">57</a></sup> → filler and silence cuts from transcript (<code>hyperframes transcribe</code>, auto-editor)<sup><a href="#s2">2</a>,<a href="#s56">56</a></sup></td><td>Pickups by clone: Qwen3-TTS (local)<sup><a href="#s46">46</a></sup> or ElevenLabs professional clone (cloud)<sup><a href="#s52">52</a></sup>; Descript for manual edits<sup><a href="#s58">58</a></sup></td><td>CLI</td><td>Local (ElevenLabs: cloud, and cloning is not covered by its zero-retention mode<sup><a href="#s51">51</a></sup>)</td><td>DeepFilterNet 5.0k, MIT/Apache; Qwen3-TTS 14.4k, Apache-2.0</td></tr>
+<tr><td><strong>Lip-sync</strong></td><td>Rhubarb Lip Sync: mouth-shape timings (6 basic shapes) from a voice file, as JSON<sup><a href="#s60">60</a></sup></td><td>MuseTalk for real faces<sup><a href="#s61">61</a></sup> (does not fit our cartoon style)</td><td>CLI → JSON → GSAP</td><td>Local</td><td>Rhubarb 2.8k stars<sup><a href="#s60">60</a></sup></td></tr>
+<tr><td><strong>Music</strong></td><td>Licensed library: current free licensed music, or a paid library (Epidemic Sound / Artlist)<sup><a href="#s69">69</a></sup>; HeyGen music catalog via <code>media-use</code><sup><a href="#s3">3</a></sup></td><td>Eleven Music (licensed generative)<sup><a href="#s62">62</a></sup>; ACE-Step 1.5 (local, MIT)<sup><a href="#s64">64</a></sup></td><td>Skill (<code>media-use</code>) / API</td><td>Library: download; ACE-Step local</td><td>ACE-Step 1.5: 14.8k stars<sup><a href="#s64">64</a></sup></td></tr>
+<tr><td><strong>SFX</strong></td><td>Sonniss GDC bundles (royalty-free)<sup><a href="#s68">68</a></sup> + <code>media-use</code> bundled sounds and Openverse<sup><a href="#s3">3</a></sup></td><td>ElevenLabs SFX for custom sounds up to 30 s<sup><a href="#s67">67</a></sup>; Stable Audio Open (local)<sup><a href="#s65">65</a></sup></td><td>Skill / API</td><td>Library local; ElevenLabs cloud</td><td>Stable Audio Open: Stability community licence<sup><a href="#s65">65</a></sup></td></tr>
+<tr><td><strong>Mix</strong></td><td>ffmpeg <code>sidechaincompress</code> (ducking) + <code>loudnorm</code><sup><a href="#s70">70</a></sup>; <code>hyperframes normalize-audio</code> and <code>audio</code><sup><a href="#s2">2</a></sup></td><td>Descript Studio Sound<sup><a href="#s58">58</a></sup></td><td>CLI</td><td>Local</td><td>ffmpeg: industry standard</td></tr>
+<tr><td><strong>QA / review</strong></td><td><code>hyperframes check --json</code> gate + snapshot PNGs read by Claude<sup><a href="#s2">2</a></sup>; OpenMontage-style post-render review (ffprobe, frames at 4 points, audio levels)<sup><a href="#s7">7</a></sup></td><td>Gemini full-cut critique<sup><a href="#s44">44</a></sup></td><td>CLI</td><td>Local (Gemini cloud)</td><td>In current HyperFrames CLI<sup><a href="#s2">2</a></sup></td></tr>
+<tr><td><strong>HITL gates</strong></td><td>OpenMontage enforced gates + Backlot board<sup><a href="#s7">7</a></sup>; one Claude Code skill per stage with <code>disable-model-invocation</code><sup><a href="#s14">14</a></sup></td><td>ViMax Web UI with storyboard previews and render checkpoints<sup><a href="#s31">31</a></sup>; LangGraph <code>interrupt</code><sup><a href="#s80">80</a></sup></td><td>Skills</td><td>Local</td><td>OpenMontage gates enforced in code<sup><a href="#s7">7</a></sup></td></tr>
+<tr><td><strong>Feedback → skill learning</strong></td><td><code>skill-creator</code>: evals, baseline comparison, review viewer, <code>feedback.json</code><sup><a href="#s10">10</a></sup></td><td>Learnings file with gated promotion<sup><a href="#s81">81</a></sup>; subagent <code>memory</code> folder<sup><a href="#s15">15</a></sup></td><td>Native skill</td><td>Local</td><td><span class="flag">Gap:</span> patterns exist, no finished product</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============ 3. STARTER STACK ============ -->
+<h2 id="stack">3. Recommended starter stack</h2>
+<p>What to add on top of HyperFrames + Claude Code now, and what to leave out. One line on why for each.</p>
+
+<h3>Adopt now</h3>
+<div class="tablewrap mid">
+<table>
+<thead><tr><th>Item</th><th>Why</th><th class="c">Cost / privacy</th></tr></thead>
+<tbody>
+<tr><td><span class="tag adopt">Adopt</span> HyperFrames <code>check --json</code>, <code>snapshot</code>, <code>timeline</code>, <code>history</code></td><td>These are already installed. They give a quality gate, frames Claude can see, edits without hand-coding, and undo when a change makes things worse.<sup><a href="#s2">2</a></sup></td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> <code>skill-creator</code> (anthropics/skills)</td><td>It is the only maintained tool that tests a changed skill against the old version and collects human feedback in a viewer.<sup><a href="#s10">10</a></sup> We use it to turn general notes into skill changes.</td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> Learnings file + gated promotion pattern</td><td>Every general note is logged right away and promoted into a skill only after review, so one-off taste does not leak into the rules.<sup><a href="#s81">81</a>,<a href="#s82">82</a></sup></td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> Rhubarb Lip Sync</td><td>It turns the founder's recording into mouth-shape timings for 2D characters, which matches the accepted cartoon-founder style.<sup><a href="#s60">60</a></sup></td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> DeepFilterNet + transcript-based filler cuts</td><td>Local noise removal (MIT/Apache)<sup><a href="#s57">57</a></sup>, and word timestamps from <code>hyperframes transcribe</code><sup><a href="#s2">2</a></sup> let ffmpeg cut "um" and long pauses. The founder's voice never leaves the machine.</td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> Dembrandt</td><td>One command pulls a client's colours, fonts and logo from their website<sup><a href="#s73">73</a></sup>, so personalised frames can use their brand.</td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> ffmpeg ducking + loudness</td><td><code>sidechaincompress</code> lowers music under the voice and <code>loudnorm</code> sets a consistent level<sup><a href="#s70">70</a></sup>. These are rules we can write into the sound skill.</td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> Sonniss GDC sound bundles</td><td>Large royalty-free SFX libraries with no attribution needed. Read each bundle's licence file; the 2024 bundle bans AI training.<sup><a href="#s68">68</a></sup></td><td class="c">Free, local</td></tr>
+<tr><td><span class="tag adopt">Adopt</span> Own skills: <em>brief</em>, <em>claims ledger</em>, <em>founder-voice script</em>, <em>critic</em></td><td>No package covers argument quality, the founder's own voice, or expert plausibility. These are short markdown skills built from the framework notes and first-video lessons.</td><td class="c">Free, local</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Trial or borrow ideas</h3>
+<div class="tablewrap mid">
+<table>
+<thead><tr><th>Item</th><th>Why</th><th class="c">Cost / privacy</th></tr></thead>
+<tbody>
+<tr><td><span class="tag borrow">Borrow</span> OpenMontage gate protocol, reviewer skill and post-render checks</td><td>It is the best existing design for enforced approvals, a board showing what waits for sign-off, and automatic render checks.<sup><a href="#s7">7</a></sup> It is too broad to run as-is: 12 pipelines, many providers, and Remotion by default for explainers.</td><td class="c">Free (AGPL-3.0), local</td></tr>
+<tr><td><span class="tag trial">Trial</span> Qwen3-TTS voice clone for pickups</td><td>Apache-2.0, local, clones from about 3 seconds of audio.<sup><a href="#s46">46</a></sup> Use it to fix one word, never for a whole video, and only after a blind listen.</td><td class="c">Free, local (GPU helps)</td></tr>
+<tr><td><span class="tag trial">Trial</span> Qwen-Image-Edit-2511 or Nano Banana for character sheets</td><td>Both keep a character consistent across images: Qwen locally under Apache-2.0<sup><a href="#s71">71</a></sup>, Nano Banana in the cloud with up to 14 references<sup><a href="#s72">72</a></sup>.</td><td class="c">Qwen local; Nano Banana cloud, paid</td></tr>
+<tr><td><span class="tag trial">Trial</span> Gemini video review of the rough cut</td><td>A second opinion on pacing over the whole cut, with notes at MM:SS.<sup><a href="#s44">44</a></sup> Send only cuts without sensitive client data.</td><td class="c">Cloud, paid API</td></tr>
+<tr><td><span class="tag trial">Trial</span> ElevenLabs SFX / Eleven Music</td><td>For a sound we cannot find. Music output is cleared for commercial use through Merlin and Kobalt licences.<sup><a href="#s62">62</a></sup></td><td class="c">Cloud, paid</td></tr>
+<tr><td><span class="tag borrow">Borrow</span> Code2Video planner → coder → critic</td><td>A separate critic agent refines the layout of each scene.<sup><a href="#s29">29</a></sup> We copy the split, not the code.</td><td class="c">Idea only</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Skip</h3>
+<div class="tablewrap mid">
+<table>
+<thead><tr><th>Item</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><span class="tag skip">Skip</span> Switching to Remotion</td><td>Its skills are good<sup><a href="#s4">4</a></sup>, and it is free for companies of up to 3 people<sup><a href="#s5">5</a></sup>, but it does the same job as HyperFrames and needs React and a bundler.<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td><span class="tag skip">Skip</span> Motion Canvas, Revideo, Manim, Rive, After Effects MCP</td><td>Motion Canvas has no official agent skill<sup><a href="#s21">21</a></sup>, Revideo is now described as the engine behind Midrender<sup><a href="#s20">20</a></sup>, Manim is for maths, Rive's official MCP only runs inside its desktop editor<sup><a href="#s26">26</a></sup>, and After Effects MCP servers need the app open<sup><a href="#s27">27</a></sup>.</td></tr>
+<tr><td><span class="tag skip">Skip</span> Research pipelines (Paper2Video, ViMax, MovieAgent, TheoremExplainAgent…)</td><td>They have no gates or weak ones, need large GPUs (Paper2Video recommends a 48 GB card)<sup><a href="#s28">28</a></sup>, or are built on generated video<sup><a href="#s31">31</a></sup>. Some are stale.<sup><a href="#s30">30</a>,<a href="#s33">33</a></sup></td></tr>
+<tr><td><span class="tag skip">Skip</span> Generated photoreal video (Veo, Kling, Runway) for the story</td><td>It breaks the "no fake realism" lesson, and consumers want AI video disclosed.<sup><a href="#s79">79</a></sup> At most, use it for abstract filler shots.</td></tr>
+<tr><td><span class="tag skip">Skip</span> Talking-head avatars and photoreal lip-sync</td><td>Same trust problem. HeyGen avatars<sup><a href="#s8">8</a></sup>, MuseTalk and LatentSync<sup><a href="#s61">61</a></sup> are for real faces, not our cartoon style.</td></tr>
+<tr><td><span class="tag skip">Skip</span> Chatterbox, F5-TTS, MMAudio, CrisperWhisper weights, BRIA RMBG</td><td>Chatterbox is retired<sup><a href="#s47">47</a></sup>. The others have non-commercial weights<sup><a href="#s48">48</a>,<a href="#s66">66</a>,<a href="#s55">55</a>,<a href="#s74">74</a></sup>. In rembg, pick a BiRefNet model instead of the BRIA default.<sup><a href="#s74">74</a></sup></td></tr>
+<tr><td><span class="tag skip">Skip</span> Sora, Udio downloads</td><td>The Sora API closed on 24 Sep 2026.<sup><a href="#s77">77</a></sup> Udio turned off public downloads after its UMG settlement.<sup><a href="#s63">63</a></sup></td></tr>
+<tr><td><span class="tag skip">Skip</span> LangGraph</td><td>Its <code>interrupt</code> pause works<sup><a href="#s80">80</a></sup>, but Claude Code skills and files already give us the same stop-and-wait with no extra system.</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============ 4. GATES ============ -->
+<h2 id="gates">4. Proposed human checkpoints</h2>
+<p>Four main gates and one light final check. They are modelled on OpenMontage's enforced gates (proposal, script, scene plan, assets, publish)<sup><a href="#s7">7</a></sup> and changed to fit our lessons, especially "record the voice first, then time the visuals to it".</p>
+
+<figure>
+<svg viewBox="0 0 1000 300" width="100%" role="img" aria-label="Pipeline with five human gates and a feedback loop into skills">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2B1600"/>
+    </marker>
+    <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8C6A2E"/>
+    </marker>
+  </defs>
+  <!-- inputs -->
+  <rect x="8" y="40" width="110" height="64" rx="8" fill="#F6F4EA" stroke="#CFC8B0"/>
+  <text x="63" y="66" text-anchor="middle" font-size="14" fill="#2B1600" font-weight="600">Inputs</text>
+  <text x="63" y="86" text-anchor="middle" font-size="11" fill="#5E4A2E">calls, research, notes</text>
+  <line x1="118" y1="72" x2="146" y2="72" stroke="#2B1600" stroke-width="1.5" marker-end="url(#ar)"/>
+  <!-- stages -->
+  <g font-size="13" fill="#2B1600">
+    <rect x="148" y="40" width="140" height="64" rx="8" fill="#F6F4EA" stroke="#8C6A2E" stroke-width="2"/>
+    <text x="218" y="64" text-anchor="middle" font-weight="700">G1 Brief +</text>
+    <text x="218" y="82" text-anchor="middle" font-weight="700">claims ledger</text>
+    <line x1="288" y1="72" x2="316" y2="72" stroke="#2B1600" stroke-width="1.5" marker-end="url(#ar)"/>
+
+    <rect x="318" y="40" width="140" height="64" rx="8" fill="#F6F4EA" stroke="#8C6A2E" stroke-width="2"/>
+    <text x="388" y="64" text-anchor="middle" font-weight="700">G2 Script +</text>
+    <text x="388" y="82" text-anchor="middle" font-weight="700">storyboard</text>
+    <line x1="458" y1="72" x2="486" y2="72" stroke="#2B1600" stroke-width="1.5" marker-end="url(#ar)"/>
+
+    <rect x="488" y="40" width="120" height="64" rx="8" fill="#F6F4EA" stroke="#8C6A2E" stroke-width="2"/>
+    <text x="548" y="64" text-anchor="middle" font-weight="700">G3 Voice</text>
+    <text x="548" y="82" text-anchor="middle" font-weight="700">takes</text>
+    <line x1="608" y1="72" x2="636" y2="72" stroke="#2B1600" stroke-width="1.5" marker-end="url(#ar)"/>
+
+    <rect x="638" y="40" width="110" height="64" rx="8" fill="#ECEADB" stroke="#CFC8B0"/>
+    <text x="693" y="64" text-anchor="middle">Build to voice</text>
+    <text x="693" y="82" text-anchor="middle" font-size="11" fill="#5E4A2E">auto + check</text>
+    <line x1="748" y1="72" x2="776" y2="72" stroke="#2B1600" stroke-width="1.5" marker-end="url(#ar)"/>
+
+    <rect x="778" y="40" width="100" height="64" rx="8" fill="#F6F4EA" stroke="#8C6A2E" stroke-width="2"/>
+    <text x="828" y="64" text-anchor="middle" font-weight="700">G4 Rough</text>
+    <text x="828" y="82" text-anchor="middle" font-weight="700">cut</text>
+    <line x1="878" y1="72" x2="902" y2="72" stroke="#2B1600" stroke-width="1.5" marker-end="url(#ar)"/>
+
+    <rect x="904" y="40" width="88" height="64" rx="8" fill="#F6F4EA" stroke="#8C6A2E" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="948" y="64" text-anchor="middle" font-weight="700">G5 Mix</text>
+    <text x="948" y="82" text-anchor="middle" font-weight="700">+ ship</text>
+  </g>
+  <!-- feedback loop -->
+  <g stroke="#8C6A2E" stroke-width="1.5" fill="none">
+    <line x1="218" y1="104" x2="218" y2="160"/>
+    <line x1="388" y1="104" x2="388" y2="160"/>
+    <line x1="548" y1="104" x2="548" y2="160"/>
+    <line x1="828" y1="104" x2="828" y2="160"/>
+    <line x1="948" y1="104" x2="948" y2="160"/>
+    <line x1="218" y1="160" x2="948" y2="160"/>
+    <line x1="583" y1="160" x2="583" y2="186" marker-end="url(#arg)"/>
+  </g>
+  <text x="600" y="152" font-size="12" fill="#8C6A2E">notes tagged [this video] or [rule]</text>
+  <rect x="438" y="188" width="290" height="40" rx="8" fill="#F6F4EA" stroke="#8C6A2E"/>
+  <text x="583" y="213" text-anchor="middle" font-size="13" fill="#2B1600">[rule] notes → learnings.md (pending)</text>
+  <line x1="583" y1="228" x2="583" y2="244" stroke="#8C6A2E" stroke-width="1.5" marker-end="url(#arg)"/>
+  <rect x="338" y="246" width="490" height="44" rx="8" fill="#F6F4EA" stroke="#8C6A2E" stroke-width="2"/>
+  <text x="583" y="266" text-anchor="middle" font-size="13" fill="#2B1600" font-weight="700">Retro after each video: skill-creator test → founder approves</text>
+  <text x="583" y="283" text-anchor="middle" font-size="12" fill="#5E4A2E">rule + new eval case written into the matching skill</text>
+  <path d="M338,268 L60,268 L60,106" stroke="#8C6A2E" stroke-width="1.5" fill="none" stroke-dasharray="5 4" marker-end="url(#arg)"/>
+  <text x="70" y="258" font-size="12" fill="#8C6A2E">skills used by next video</text>
+</svg>
+<figcaption>Solid-bordered boxes are human gates. G5 is a light check. Every gate's notes are tagged; only notes tagged [rule] go back into skills, and only after a test and the founder's approval.</figcaption>
+</figure>
+
+<div class="gate">
+<h4>G1: Brief and claims ledger</h4>
+<p class="who">Agent prepares, founder approves. Framework parts: objective, audience, argument.</p>
+<ul class="tight">
+  <li><strong>Agent produces:</strong> a one-page brief (sales stage: cold, warm, evaluating or post-pilot; the one action we want; the emotion; the main viewer and the other likely viewers, such as engineers), plus a <em>claims ledger</em>. Each claim gets four entries: why we make it, what it proves, its evidence (quoted line from the call transcript or research, with source), and its risk if wrong.</li>
+  <li><strong>Founder decides:</strong> cut, keep or soften each claim; confirm the objective.</li>
+  <li><strong>Borrowed from:</strong> OpenMontage's proposal gate<sup><a href="#s7">7</a></sup>; Toulmin claim–grounds–warrant<sup><a href="#s42">42</a></sup>; Minto's "answer first, three or four supports"<sup><a href="#s38">38</a></sup>.</li>
+</ul>
+</div>
+
+<div class="gate">
+<h4>G2: Script and storyboard</h4>
+<p class="who">Writer agent, then a separate critic agent, then founder.</p>
+<ul class="tight">
+  <li><strong>Agent produces:</strong> the script in the founder's spoken style, timed at about 150 words a minute<sup><a href="#s35">35</a></sup>, and storyboard frames as real HyperFrames stills (<code>snapshot</code>)<sup><a href="#s2">2</a></sup>, so the founder sees the real style.</li>
+  <li><strong>Critic report beside it:</strong> each claim maps to the ledger; a list of banned AI-sounding phrases; "does the narration repeat the screen?"; "would an expert believe this drawing?" (for example, camera angle against the object); hook in the first 30 seconds, where Wistia saw the biggest early drop<sup><a href="#s39">39</a></sup>.</li>
+  <li><strong>Borrowed from:</strong> OpenMontage script and scene-plan gates<sup><a href="#s7">7</a></sup>; Code2Video's separate critic<sup><a href="#s29">29</a></sup>.</li>
+</ul>
+</div>
+
+<div class="gate">
+<h4>G3: Voice takes</h4>
+<p class="who">Founder records, agent cleans, founder picks.</p>
+<ul class="tight">
+  <li><strong>Agent produces:</strong> a cleaned recording (DeepFilterNet)<sup><a href="#s57">57</a></sup>, a word-timed transcript<sup><a href="#s2">2</a></sup>, flagged fillers and stumbles, and a list of lines that changed from the script.</li>
+  <li><strong>Founder decides:</strong> which takes to keep and whether any one-word pickup may use a clone.</li>
+  <li><strong>Then automatic:</strong> visuals are timed to the approved audio, mouths come from Rhubarb<sup><a href="#s60">60</a></sup>, and <code>check --json</code> must pass before G4<sup><a href="#s2">2</a></sup>.</li>
+</ul>
+</div>
+
+<div class="gate">
+<h4>G4: Rough cut</h4>
+<p class="who">Agent renders and self-reviews; founder watches.</p>
+<ul class="tight">
+  <li><strong>Agent produces:</strong> the full render; a contact sheet of one frame per beat; a self-review covering file checks, audio levels, frames at fixed points and subtitle checks (as OpenMontage does)<sup><a href="#s7">7</a></sup>; optionally a Gemini pacing note<sup><a href="#s44">44</a></sup>.</li>
+  <li><strong>Founder gives notes</strong>, each tagged <em>[this video]</em> or <em>[rule]</em>. HyperFrames <code>history</code> lets the agent undo a change that made things worse<sup><a href="#s2">2</a></sup>.</li>
+</ul>
+</div>
+
+<div class="gate">
+<h4>G5 (light): Mix and ship</h4>
+<ul class="tight">
+  <li>Music ducked under the voice, loudness normalised<sup><a href="#s70">70</a></sup>, licences logged for every track and sound. One final watch.</li>
+</ul>
+</div>
+
+<h3>Where general feedback is written back into skills</h3>
+<ol>
+  <li><strong>Capture:</strong> during any gate, a note tagged <em>[rule]</em> is appended to <code>learnings.md</code> with status <em>pending</em>, the gate it came from, and the target skill (brief, claims, script voice, direction, visual, sound). This follows the community self-improvement pattern, where promotion "never" happens automatically.<sup><a href="#s81">81</a></sup></li>
+  <li><strong>Retro after each video:</strong> for each pending rule, run <code>skill-creator</code> on the target skill. Add the rule and an eval case built from the mistake, run the old and new skill side by side, and the founder approves in the review viewer.<sup><a href="#s10">10</a></sup></li>
+  <li><strong>Promote or reject:</strong> approved rules move into the skill's <code>SKILL.md</code> or a reference file. Rules seen only once can wait for a second occurrence, as the skill-improver pattern advises.<sup><a href="#s82">82</a></sup></li>
+  <li><strong>Agent memory as a fallback:</strong> subagents can have a <code>memory</code> folder that loads at start.<sup><a href="#s15">15</a></sup> Use it for soft preferences; keep hard rules in skills so they are versioned and tested.</li>
+  <li><strong>Codex too:</strong> Codex reads the same <code>SKILL.md</code> format from <code>.agents/skills</code> and ships its own <code>skill-creator</code>.<sup><a href="#s12">12</a></sup> Skills written this way work in both tools.</li>
+</ol>
+
+<!-- ============ 5. DEEP DIVES ============ -->
+<h2 id="deep">5. Deep dives by layer</h2>
+<p class="note">Each section compares options on: what it does, fit with Claude Code / Codex, human checkpoints, quality evidence, maturity, cost, privacy, and which framework part it serves. Open one at a time.</p>
+
+<!-- Layer 1 -->
+<details id="d1">
+<summary>5.1 Claude Code / Codex skills, plugins and MCP servers for video</summary>
+<div class="body">
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Option</th><th>What it does</th><th>Fit</th><th>HITL</th><th>Evidence</th><th>Maturity</th><th>Cost</th><th>Privacy</th><th>Serves</th></tr></thead>
+<tbody>
+<tr><td><strong>HyperFrames skills</strong> (9: hyperframes, hyperframes-cli, hyperframes-registry, media-use, reverse-any-video, style-sampling, figma, slideshow, remotion-to-hyperframes)<sup><a href="#s1">1</a></sup></td><td>Teach the agent to write, check, preview and render HTML video</td><td>Native skills / plugin; also works in Codex, Cursor, Gemini CLI<sup><a href="#s1">1</a></sup></td><td>History with per-turn undo; <code>share</code> for review<sup><a href="#s2">2</a></sup></td><td>Our first video; deterministic output "same input, same frames"<sup><a href="#s1">1</a></sup></td><td>84.3k stars, 7,174 commits, Apache-2.0<sup><a href="#s1">1</a></sup></td><td>Free; HeyGen credits optional<sup><a href="#s3">3</a></sup></td><td>Local render; HeyGen media paths are cloud<sup><a href="#s3">3</a></sup></td><td>Animation, QA, media</td></tr>
+<tr><td><strong>Remotion agent skills</strong> (13)<sup><a href="#s4">4</a></sup></td><td>Best practices, create, render, captions, maps, studio, docs search</td><td>Native skills (Claude Code, Codex, Cursor)<sup><a href="#s4">4</a></sup></td><td>Studio preview</td><td>Official, maintained by Remotion</td><td>73.2k stars, source-available licence<sup><a href="#s6">6</a></sup></td><td>Free ≤3 people; $25/seat/month otherwise<sup><a href="#s5">5</a></sup></td><td>Local</td><td>Animation</td></tr>
+<tr><td><strong>heygen-com/skills</strong><sup><a href="#s8">8</a></sup></td><td>Avatar (digital twin), avatar video, translation with lip-sync</td><td>Native skills</td><td>None stated</td><td>Vendor product</td><td>550 stars, MIT<sup><a href="#s8">8</a></sup></td><td>HeyGen plan</td><td class="flag">Cloud; uploads face and voice</td><td>Not our style (skip)</td></tr>
+<tr><td><strong>anthropics/skills</strong><sup><a href="#s9">9</a></sup></td><td>19 official skills incl. skill-creator, brand-guidelines, theme-factory, canvas-design, frontend-design</td><td>Native; <code>/plugin marketplace add anthropics/skills</code></td><td>skill-creator review viewer<sup><a href="#s10">10</a></sup></td><td>Official</td><td>194.6k stars; many skills Apache-2.0<sup><a href="#s9">9</a></sup></td><td>Free</td><td>Local</td><td>Feedback learning, visual identity</td></tr>
+<tr><td><strong>ComposioHQ/awesome-claude-skills</strong><sup><a href="#s11">11</a></sup></td><td>Curated list. Video entries are mostly download and upload tools; no video-production skill of note</td><td>List</td><td>—</td><td>—</td><td>79.5k stars<sup><a href="#s11">11</a></sup></td><td>Free</td><td>—</td><td>Discovery only</td></tr>
+<tr><td><strong>FFmpeg editing skills</strong> (e.g. sundial-org ffmpeg-video-editor)<sup><a href="#s83">83</a></sup></td><td>Plain-language requests turned into ffmpeg commands</td><td>Native skill</td><td>None</td><td>Directory listing only</td><td>About 637 stars on parent repo (third-party count)<sup><a href="#s83">83</a></sup></td><td>Free</td><td>Local</td><td>Mix, edits. Claude already writes ffmpeg well, so optional</td></tr>
+<tr><td><strong>Video MCP servers</strong> (Kinocut / mcp-video, video-audio-mcp, ffmpeg-mcp)<sup><a href="#s17">17</a>,<a href="#s18">18</a></sup></td><td>Wrap ffmpeg as MCP tools (Kinocut lists 87+ tools)</td><td>MCP</td><td>None</td><td>Directory listings; Kinocut 1.16.0 on 2026-10-02<sup><a href="#s18">18</a></sup></td><td>Small community projects</td><td>Free</td><td>Local</td><td>Skip: a CLI the agent already calls does the same job</td></tr>
+<tr><td><strong>Codex skills</strong><sup><a href="#s12">12</a></sup></td><td>Same <code>SKILL.md</code> format, read from <code>.agents/skills</code>; built-in <code>$skill-creator</code> and <code>$skill-installer</code></td><td>Codex native</td><td>—</td><td>Official docs</td><td>Open Agent Skills standard (agentskills.io), about 40 adopters reported<sup><a href="#s13">13</a></sup></td><td>Free</td><td>Local files</td><td>Portability</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note"><span class="flag">Flag:</span> most skill "marketplace" pages are aggregators that copy repos and show stale star counts. Always check the GitHub repo.</p>
+</div>
+</details>
+
+<!-- Layer 2 -->
+<details id="d2">
+<summary>5.2 Programmatic video and animation frameworks</summary>
+<div class="body">
+<p>What matters for us: can an agent write it reliably, does it render the same frames every time (seekable, deterministic), and is there an ecosystem of ready parts?</p>
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Framework</th><th>Agent authoring</th><th>Deterministic / seekable</th><th>Ecosystem</th><th>Maturity</th><th>Cost / licence</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td><strong>HyperFrames</strong></td><td>Plain HTML + GSAP, no build step; official skills; <code>check</code> gate<sup><a href="#s1">1</a>,<a href="#s2">2</a></sup></td><td>Yes: "deterministic MP4"; seekable adapters (GSAP, CSS, Lottie, Three.js, WAAPI)<sup><a href="#s1">1</a></sup></td><td>About 450 registry blocks<sup><a href="#s85">85</a></sup>; Figma, Remotion import<sup><a href="#s1">1</a></sup></td><td>84.3k stars<sup><a href="#s1">1</a></sup></td><td>Apache-2.0, free</td><td><span class="tag adopt">Keep</span></td></tr>
+<tr><td><strong>Remotion</strong></td><td>React; 13 official skills<sup><a href="#s4">4</a></sup></td><td>Yes (frame-based)</td><td>Largest; mature cloud render (Lambda)<sup><a href="#s1">1</a></sup></td><td>73.2k stars<sup><a href="#s6">6</a></sup></td><td>Free ≤3 people; then $25/seat/month or per render<sup><a href="#s5">5</a></sup></td><td><span class="tag skip">Skip</span> duplicate</td></tr>
+<tr><td><strong>Motion Canvas</strong></td><td>TypeScript generators; no official agent skill<sup><a href="#s21">21</a></sup></td><td>Yes</td><td>Editor with audio sync</td><td>19.9k stars, MIT<sup><a href="#s19">19</a></sup></td><td>Free</td><td><span class="tag skip">Skip</span></td></tr>
+<tr><td><strong>Revideo</strong></td><td>Fork of Motion Canvas for headless rendering</td><td>Yes</td><td>Now "the engine behind Midrender"<sup><a href="#s20">20</a></sup></td><td>4.2k stars, MIT, no releases listed<sup><a href="#s20">20</a></sup></td><td>Free</td><td><span class="tag skip">Skip</span> <span class="flag">focus moved</span></td></tr>
+<tr><td><strong>Manim</strong> (+ Manim skills)</td><td>Python; several community skills (e.g. manim-composer, a render-and-view loop)<sup><a href="#s23">23</a></sup></td><td>Yes</td><td>Maths diagrams</td><td>42.5k stars, MIT<sup><a href="#s22">22</a></sup></td><td>Free</td><td><span class="tag skip">Skip</span> wrong look for ops buyers</td></tr>
+<tr><td><strong>Lottie via diffusionstudio/lottie</strong></td><td>Skill + live preview player for agent-written Lottie JSON<sup><a href="#s24">24</a></sup></td><td>Yes (Lottie is seekable; HyperFrames can play it<sup><a href="#s1">1</a></sup>)</td><td>LottieFiles Creator also has an MCP<sup><a href="#s25">25</a></sup></td><td>5.8k stars, MIT<sup><a href="#s24">24</a></sup></td><td>Free</td><td><span class="tag trial">Later</span> for small icon loops</td></tr>
+<tr><td><strong>Rive</strong></td><td>Official MCP only inside desktop editor (Early Access)<sup><a href="#s26">26</a></sup>; several community servers</td><td>Runtime state machines; built for apps</td><td>Interactive UI focus</td><td>Early</td><td>Rive plan</td><td><span class="tag skip">Skip</span></td></tr>
+<tr><td><strong>After Effects MCP</strong></td><td>ExtendScript through a bridge panel; e.g. 47 tools<sup><a href="#s27">27</a></sup></td><td>Yes, via aerender</td><td>Huge plug-in world</td><td>Many small forks</td><td>Adobe subscription</td><td><span class="tag skip">Skip</span> needs the app open</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</details>
+
+<!-- Layer 3 -->
+<details id="d3">
+<summary>5.3 Agentic "document or script to video" pipelines</summary>
+<div class="body">
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Project</th><th>What it does</th><th>Fit</th><th>HITL</th><th>Evidence</th><th>Maturity</th><th>Cost / privacy</th><th>Usable today?</th></tr></thead>
+<tbody>
+<tr><td><strong>OpenMontage</strong><sup><a href="#s7">7</a></sup></td><td>Agentic production system: 12 pipelines; research → proposal → script → scene plan → assets → edit → compose</td><td>Runs inside Claude Code / Codex (ships CLAUDE.md and CODEX.md)</td><td><strong>Yes, enforced</strong>: proposal, script, scene plan, assets (contact sheet with cost and scores), publish; spend gate above $0.50; Backlot board</td><td>Post-render self-review: ffprobe, 4 frames, audio levels, subtitles; "if the review fails, the video is not presented"</td><td>80.5k stars, AGPL-3.0, 724 commits; released June 2026<sup><a href="#s7">7</a></sup></td><td>Free; providers mixed local (Piper TTS, local SD) and cloud</td><td><span class="tag borrow">Borrow</span> design. <span class="flag">Third-party star counts vary from 8.6k to 61.9k</span><sup><a href="#s84">84</a></sup>, so treat popularity with care.</td></tr>
+<tr><td><strong>Paper2Video / PaperTalker</strong><sup><a href="#s28">28</a></sup></td><td>Paper → slides → subtitles → speech → cursor → talking head</td><td>Python scripts</td><td>None</td><td>Benchmark + human study (NeurIPS 2025 workshop)</td><td>2.4k stars, MIT; last news Oct 2025</td><td>Needs 48 GB GPU; cloud LLM</td><td><span class="tag skip">No</span></td></tr>
+<tr><td><strong>Code2Video</strong><sup><a href="#s29">29</a></sup></td><td>Planner, Coder, Critic agents write Manim code for teaching videos</td><td>Python</td><td>None</td><td>TeachQuiz and aesthetic evals; ICML 2026</td><td>2.4k stars, MIT; active Aug 2026</td><td>Cloud LLM</td><td><span class="tag borrow">Borrow</span> the critic idea</td></tr>
+<tr><td><strong>TheoremExplainAgent</strong><sup><a href="#s30">30</a></sup></td><td>Long Manim explainers with Kokoro voice</td><td>Python</td><td>None</td><td>Oral paper; no success rates on page</td><td>1.5k stars, MIT; last news June 2025</td><td>Cloud LLM</td><td><span class="tag skip">No</span> <span class="flag">stale</span></td></tr>
+<tr><td><strong>ViMax</strong><sup><a href="#s31">31</a></sup></td><td>Idea / script / novel → story, characters, storyboard, generated video</td><td>Python, TUI, Web UI</td><td>Partial: Web UI with storyboard previews and render checkpoints (v1.2.0, July 2026)</td><td>Technical report June 2026</td><td>12.9k stars, MIT</td><td>Cloud image and video models (Veo, Seedance)</td><td><span class="tag skip">No</span>: built on generated video</td></tr>
+<tr><td><strong>FilmAgent</strong><sup><a href="#s32">32</a></sup></td><td>"Chat an idea, get a film": script, characters, storyboard, generated video, edit</td><td>Python + web</td><td>Yes: each stage can be viewed, edited and regenerated</td><td>—</td><td>1.9k stars, MIT; news June 2026</td><td>Cloud video models</td><td><span class="tag skip">No</span>: fiction focus</td></tr>
+<tr><td><strong>MovieAgent</strong><sup><a href="#s33">33</a></sup></td><td>Script + character bank → multi-shot film</td><td>Python</td><td>None</td><td>—</td><td>375 stars; no licence shown; last news Mar 2025</td><td>GPT-4o + local video models</td><td><span class="tag skip">No</span> <span class="flag">stale</span></td></tr>
+<tr><td><strong>VideoAgent (HKUDS)</strong><sup><a href="#s34">34</a></sup></td><td>Understand, edit and remix existing videos</td><td>Python; Claude is its router</td><td>None (self-evaluation only)</td><td>Reports 0.95 workflow success</td><td>2.0k stars, MIT</td><td>Several cloud LLMs</td><td><span class="tag skip">No</span>: remixing, not explainers</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note">Pattern across these projects: the more autonomous the pipeline, the fewer human gates it has. Only OpenMontage, ViMax and FilmAgent let a person stop and edit between stages, and only OpenMontage enforces it.</p>
+</div>
+</details>
+
+<!-- Layer 4 -->
+<details id="d4">
+<summary>5.4 Screenwriting, storyboarding and story structure</summary>
+<div class="body">
+<h4>Tools and skills</h4>
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Option</th><th>What it does</th><th>Fit</th><th>Evidence / maturity</th><th>Privacy</th><th>Serves</th></tr></thead>
+<tbody>
+<tr><td>Argument-mapping / argument-validator skills<sup><a href="#s42">42</a></sup></td><td>Toulmin analysis, hidden assumptions, missing premises</td><td>Native skill</td><td>Community; no maintenance data</td><td>Local</td><td>Claims ledger, critic</td></tr>
+<tr><td>Loki (OpenFactVerification)<sup><a href="#s41">41</a></sup></td><td>Splits text into claims, judges check-worthiness, retrieves evidence, verifies; built to assist human judgement</td><td>Python library / web app</td><td>MIT; COLING 2025 demo</td><td class="flag">Needs OpenAI + Serper keys</td><td>Checking public facts (industry numbers)</td></tr>
+<tr><td>Story-critic, screenwriter, storyboard-manager skills<sup><a href="#s43">43</a></sup></td><td>Critique reports, screenplay format, consistency tracking</td><td>Native skill</td><td>Community; written for fiction</td><td>Local</td><td>Ideas for our critic</td></tr>
+<tr><td>OpenMontage script / scene-plan skills<sup><a href="#s7">7</a></sup></td><td>Per-stage director instructions + style playbooks (e.g. Clean Professional)</td><td>Markdown skills</td><td>See 5.3</td><td>Local</td><td>Template for our skills</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Practitioner frameworks worth encoding in skills</h4>
+<ul>
+  <li><strong>Strategic narrative (Andy Raskin).</strong> Open by naming a big, relevant change in the world. Then show winners and losers, the "promised land", our capabilities as the way there, and proof.<sup><a href="#s36">36</a></sup> Fits "sell the problem" and teaser videos.</li>
+  <li><strong>Great Demo (Peter Cohan).</strong> "Do the last thing first": show the end result first, then how to get there. Open with a "situation slide" that restates the customer's situation and checks it is still right.<sup><a href="#s37">37</a></sup> Fits personalised follow-ups and proof-of-concept videos.</li>
+  <li><strong>Pyramid principle / SCQA (Barbara Minto).</strong> Situation → complication → question → answer, with three or four supports under the answer, each answering "why?" or "how?".<sup><a href="#s38">38</a></sup> Fits the claims ledger and chapter order.</li>
+  <li><strong>Explainer order.</strong> Hook → problem → solution → how it works → one call to action. Keep the problem setup short (one guide says under 15 seconds) and make the ask specific and easy.<sup><a href="#s35">35</a></sup> Narration runs at about 130–160 words a minute, so time it by reading aloud.<sup><a href="#s35">35</a></sup></li>
+  <li><strong>Length and hook data (Wistia).</strong> In Wistia's 2016 study of 564,710 videos, 2 minutes was the "sweet spot". Their retention analysis shows a 4.9% early drop for 1–2 minute videos against 17.3% for 5–10 minute videos.<sup><a href="#s39">39</a></sup> Their 2024 report found little difference between 1 and 5 minutes, but a significant drop after 5.<sup><a href="#s40">40</a></sup></li>
+</ul>
+<p class="note"><span class="flag">Gap:</span> none of these tools links a claim to a line in the client's call transcript. That traceability is the core of our "credible, personalised, every argument thought through" rule, so the claims-ledger skill is ours to write.</p>
+</div>
+</details>
+
+<!-- Layer 5 -->
+<details id="d5">
+<summary>5.5 Direction and pacing checks</summary>
+<div class="body">
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Option</th><th>What it checks</th><th>Fit</th><th>Evidence</th><th>Privacy</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td><code>hyperframes check --json</code><sup><a href="#s2">2</a></sup></td><td>Lint, runtime errors, layout (overflow, off-frame, hidden text), WCAG contrast with a suggested colour</td><td>CLI gate</td><td>Official skill reference</td><td>Local</td><td><span class="tag adopt">Adopt</span></td></tr>
+<tr><td><code>snapshot</code>, <code>keyframes</code>, <code>compare</code>, <code>audio</code>, <code>beats</code><sup><a href="#s2">2</a></sup></td><td>PNG frames at chosen times or ranges for Claude to look at; beat detection for music cuts</td><td>CLI</td><td>"That is how you see the video"<sup><a href="#s2">2</a></sup></td><td>Local</td><td><span class="tag adopt">Adopt</span></td></tr>
+<tr><td>OpenMontage pre-compose and post-render gates<sup><a href="#s7">7</a></sup></td><td>Six-part "slideshow risk" score before render; ffprobe, frame and audio checks after</td><td>Skill + Python</td><td>Documented in README</td><td>Local</td><td><span class="tag borrow">Borrow</span></td></tr>
+<tr><td>Gemini video understanding<sup><a href="#s44">44</a></sup></td><td>Watches the whole cut, answers questions at MM:SS</td><td>API only</td><td>Timestamps second-level; developers report drift on longer videos<sup><a href="#s44">44</a></sup></td><td class="flag">Cloud</td><td><span class="tag trial">Trial</span></td></tr>
+<tr><td>invideo agent rough-cut notes<sup><a href="#s45">45</a></sup></td><td>Pacing, timing and tone notes against a style document</td><td>Web app</td><td class="flag">Vendor's own single case only</td><td>Cloud</td><td><span class="tag skip">Skip</span> hype risk</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note"><span class="flag">Gap:</span> no tool checks "where the eye goes" or holds and transitions against the script's intent. The workable approach today is a critic subagent that reads the snapshot contact sheet with the script beside it, plus rules in the direction skill (one idea per frame, the narration adds to the screen, a hold length for each key number).</p>
+</div>
+</details>
+
+<!-- Layer 6 -->
+<details id="d6">
+<summary>5.6 Voice: founder's own voice, cleanup, cloning, lip-sync</summary>
+<div class="body">
+<h4>Recording and cleanup (founder's own voice)</h4>
+<ul>
+  <li><strong>Recording.</strong> Sit 6–12 inches from the mic. Pick a soft, furnished room away from the street. Turn off humming devices. Read the script from a screen, not paper. Warm up by reading it aloud once.<sup><a href="#s59">59</a></sup></li>
+  <li><strong>Noise removal:</strong> DeepFilterNet. Code and weights are MIT/Apache; it offers a real-time build and a binary with no Python.<sup><a href="#s57">57</a></sup> Local.</li>
+  <li><strong>Fillers:</strong> <code>hyperframes transcribe</code> (Parakeet or whisper) gives word timestamps.<sup><a href="#s2">2</a></sup> CrisperWhisper writes fillers verbatim ("[um]") with word timing, but its weights are non-commercial, so commercial use needs a paid licence.<sup><a href="#s55">55</a></sup></li>
+  <li><strong>Silences:</strong> auto-editor cuts silent parts by loudness (public domain, 5.9k stars).<sup><a href="#s56">56</a></sup></li>
+  <li><strong>Manual option:</strong> Descript has one-click filler removal and Studio Sound. Its prices differ between sources.<sup><a href="#s58">58</a></sup> Cloud.</li>
+</ul>
+
+<h4>Voice cloning (for pickups only)</h4>
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Option</th><th>Quality evidence</th><th>Fit</th><th>Maturity / licence</th><th>Cost</th><th>Privacy</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td><strong>Qwen3-TTS</strong><sup><a href="#s46">46</a></sup></td><td>3-second clone; 0.6B and 1.7B models; 10 languages</td><td>Python / CLI</td><td>14.4k stars, Apache-2.0, Jan 2026</td><td>Free</td><td>Local</td><td><span class="tag trial">Trial</span></td></tr>
+<tr><td><strong>ElevenLabs</strong> (professional clone)<sup><a href="#s52">52</a></sup></td><td>Top tier on Artificial Analysis arena, though not first in 2026 snapshots<sup><a href="#s54">54</a></sup></td><td>API; also in OpenMontage</td><td>Commercial</td><td>Creator plan about $22/month (third-party)<sup><a href="#s52">52</a></sup></td><td class="flag">Cloud. Zero-retention mode is enterprise-only and excludes cloning<sup><a href="#s51">51</a></sup></td><td>Option</td></tr>
+<tr><td><strong>Cartesia Sonic</strong><sup><a href="#s53">53</a></sup></td><td>Led the provider board in Sept 2026 snapshots<sup><a href="#s54">54</a></sup></td><td>API</td><td>Commercial</td><td>Plans from a few dollars a month (sources differ)</td><td class="flag">Cloud; zero retention for enterprise only<sup><a href="#s53">53</a></sup></td><td>Option</td></tr>
+<tr><td><strong>Kokoro</strong><sup><a href="#s49">49</a></sup></td><td>82M parameters, fast; 54 preset voices; <em>no cloning</em></td><td>Built into <code>hyperframes tts</code><sup><a href="#s3">3</a></sup></td><td>Apache-2.0; v1.0 Jan 2025</td><td>Free</td><td>Local</td><td>Scratch narration only</td></tr>
+<tr><td><strong>Chatterbox</strong><sup><a href="#s47">47</a></sup></td><td>Compared with ElevenLabs by Podonos</td><td>Python</td><td class="flag">Retired Aug 2026, no longer maintained</td><td>Free</td><td>Local; watermarks output</td><td><span class="tag skip">Skip</span></td></tr>
+<tr><td><strong>F5-TTS</strong><sup><a href="#s48">48</a></sup></td><td>Best English quality in one blogger's test<sup><a href="#s50">50</a></sup></td><td>Python</td><td class="flag">Weights CC-BY-NC</td><td>Free</td><td>Local</td><td><span class="tag skip">Skip</span> for commercial use</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Lip-sync for animated characters</h4>
+<ul>
+  <li><strong>Rhubarb Lip Sync</strong>: a command-line tool that turns a voice recording into 2D mouth-shape timings (6 basic shapes, 3 optional) and exports JSON.<sup><a href="#s60">60</a></sup> We draw 6 mouth shapes for each cartoon founder and let GSAP switch between them on the timings. Local, free, 2.8k stars.</li>
+  <li><strong>MuseTalk / LatentSync</strong> re-draw mouths on real face video. MuseTalk's code is MIT; LatentSync needs about 18 GB of VRAM. Licences for the weights differ by source.<sup><a href="#s61">61</a></sup> This does not fit our accepted cartoon style.</li>
+</ul>
+</div>
+</details>
+
+<!-- Layer 7 -->
+<details id="d7">
+<summary>5.7 Sound: music, sound effects, mixing</summary>
+<div class="body">
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Option</th><th>What it does</th><th>Fit</th><th>Licence / maturity</th><th>Cost</th><th>Privacy</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Current free licensed music</td><td>What we use now</td><td>Files</td><td>Keep a licence log per track</td><td>Free</td><td>Local</td><td><span class="tag adopt">Keep</span></td></tr>
+<tr><td>Epidemic Sound / Artlist<sup><a href="#s69">69</a></sup></td><td>Subscription libraries with commercial and client-use tiers</td><td>Manual download</td><td>Sources disagree on client-work and after-cancellation terms</td><td>About $300/year (third-party)</td><td>—</td><td>If we need more choice</td></tr>
+<tr><td>HeyGen catalog via <code>media-use</code><sup><a href="#s3">3</a></sup></td><td>Music and SFX search from the agent</td><td>Native skill</td><td>HeyGen terms</td><td>Free when signed in</td><td>Cloud search, local file</td><td><span class="tag adopt">Use</span></td></tr>
+<tr><td>Eleven Music<sup><a href="#s62">62</a></sup></td><td>Generated music, licensed through Merlin and Kobalt</td><td>API</td><td>Launched Aug 2025; major labels not signed at launch</td><td>Paid</td><td>Cloud</td><td><span class="tag trial">Trial</span></td></tr>
+<tr><td>ACE-Step 1.5<sup><a href="#s64">64</a></sup></td><td>Local music generation; claims quality between Suno v4.5 and v5 (self-reported)</td><td>Python</td><td>14.8k stars, MIT; XL models Apr 2026</td><td>Free; under 4 GB VRAM</td><td>Local</td><td>Option</td></tr>
+<tr><td>Suno / Udio<sup><a href="#s63">63</a></sup></td><td>Consumer music generators</td><td>Web</td><td class="flag">Suno is still in litigation with UMG and Sony; Udio downloads are off</td><td>Paid tiers</td><td>Cloud</td><td><span class="tag skip">Skip</span></td></tr>
+<tr><td>Sonniss GDC bundles<sup><a href="#s68">68</a></sup></td><td>Large royalty-free SFX packs; GDC 2026 pack has 347+ WAV files</td><td>Files</td><td>No attribution; 2024 pack bans AI training</td><td>Free</td><td>Local</td><td><span class="tag adopt">Adopt</span></td></tr>
+<tr><td>ElevenLabs SFX<sup><a href="#s67">67</a></sup></td><td>Text to sound effect, 0.1–30 s, loopable</td><td>API</td><td>Commercial on paid plans (third-party)</td><td>Paid</td><td>Cloud</td><td><span class="tag trial">Trial</span></td></tr>
+<tr><td>Stable Audio Open<sup><a href="#s65">65</a></sup></td><td>Local SFX up to 47 s; trained on CC-licensed Freesound audio</td><td>Python</td><td>Stability Community Licence</td><td>Free under licence limits</td><td>Local</td><td>Option</td></tr>
+<tr><td>MMAudio<sup><a href="#s66">66</a></sup></td><td>Sound generated to match video</td><td>Python</td><td class="flag">Weights CC-BY-NC; last news Mar 2025</td><td>Free</td><td>Local</td><td><span class="tag skip">Skip</span></td></tr>
+<tr><td>ffmpeg <code>sidechaincompress</code> + <code>loudnorm</code><sup><a href="#s70">70</a></sup>; <code>hyperframes normalize-audio</code><sup><a href="#s2">2</a></sup></td><td>Duck music under the voice; normalise loudness</td><td>CLI</td><td>Standard</td><td>Free</td><td>Local</td><td><span class="tag adopt">Adopt</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</details>
+
+<!-- Layer 8 -->
+<details id="d8">
+<summary>5.8 Visuals: characters, brand, stock, cutouts, generated video</summary>
+<div class="body">
+<div class="tablewrap wide">
+<table>
+<thead><tr><th>Option</th><th>What it does</th><th>Fit</th><th>Licence / maturity</th><th>Cost</th><th>Privacy</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Qwen-Image-Edit-2511<sup><a href="#s71">71</a></sup></td><td>Image editing that keeps a person's identity; better multi-person consistency</td><td>Python (Diffusers)</td><td>Apache-2.0, open weights. Newer Qwen-Image 2.0 is API-only</td><td>Free; large GPU</td><td>Local</td><td><span class="tag trial">Trial</span></td></tr>
+<tr><td>Nano Banana (Gemini image)<sup><a href="#s72">72</a></sup></td><td>Keeps a character consistent; Nano Banana 2 takes up to 14 references; SynthID watermark</td><td>API</td><td>Google</td><td>Paid</td><td class="flag">Cloud; uploads founders' faces</td><td><span class="tag trial">Trial</span></td></tr>
+<tr><td><code>media-use</code> images, local FLUX (mflux)<sup><a href="#s3">3</a></sup></td><td>Asset search; local generation if installed</td><td>Native skill</td><td>—</td><td>Free / credits</td><td>Mixed</td><td>Use</td></tr>
+<tr><td>Dembrandt<sup><a href="#s73">73</a></sup></td><td>Colours, fonts, spacing and logo from a website as design tokens (W3C DTCG)</td><td>CLI + Claude skill</td><td>MIT</td><td>Free</td><td>Local</td><td><span class="tag adopt">Adopt</span></td></tr>
+<tr><td><code>hyperframes remove-background</code><sup><a href="#s2">2</a></sup> / rembg<sup><a href="#s74">74</a></sup></td><td>Cutouts. rembg supports BiRefNet, ISNet, U2Net and BRIA models</td><td>CLI</td><td>rembg MIT, 25.5k stars. <span class="flag">BRIA default is non-commercial</span></td><td>Free</td><td>Local</td><td><span class="tag adopt">Adopt</span> with BiRefNet</td></tr>
+<tr><td>Upscayl / Real-ESRGAN<sup><a href="#s75">75</a></sup></td><td>Local image upscaling</td><td>App / CLI</td><td>Upscayl AGPL-3.0; needs a Vulkan GPU</td><td>Free</td><td>Local</td><td>Option</td></tr>
+<tr><td>Pexels<sup><a href="#s76">76</a></sup></td><td>Free stock photos and video</td><td>API / download</td><td>No attribution; must not imply endorsement or show people badly</td><td>Free</td><td>—</td><td>Use for real-world context</td></tr>
+<tr><td>Veo 3.1, Kling 3.0, Runway Gen-4.5<sup><a href="#s78">78</a></sup></td><td>Generated video clips</td><td>API</td><td>Rankings differ by source</td><td>Paid</td><td>Cloud</td><td><span class="tag skip">Skip</span> for story shots</td></tr>
+<tr><td>Sora 2<sup><a href="#s77">77</a></sup></td><td>—</td><td>—</td><td class="flag">App closed Apr 2026, API closed 24 Sep 2026</td><td>—</td><td>—</td><td><span class="tag skip">Gone</span></td></tr>
+</tbody>
+</table>
+</div>
+<h4>When generated video fits B2B credibility</h4>
+<ul>
+  <li>Our own test: a photoreal composite of the founders was rejected; cartoon founders on a real storefront photo were accepted (framework notes).</li>
+  <li>The IAB 2026 study found more than half of consumers want AI video and images disclosed. The gap between how executives and consumers feel about AI ads grew from 32 to 37 points between 2024 and 2026.<sup><a href="#s79">79</a></sup> A 2026 study reported that ads labelled "AI assistance and human supervision" did better than "fully AI-generated".<sup><a href="#s79">79</a></sup> No B2B-specific study was found.</li>
+  <li>Rule for the visual skill: real photos of the client's site, plainly drawn or cartoon people, and diagrams. Generated clips only for abstract filler shots, never anything that claims to show the real floor.</li>
+</ul>
+</div>
+</details>
+
+<!-- Layer 9 -->
+<details id="d9">
+<summary>5.9 Human-in-the-loop and orchestration (brief)</summary>
+<div class="body">
+<h4>How existing tools structure approval</h4>
+<ul>
+  <li><strong>OpenMontage:</strong> gates are enforced in code. The checkpoint writer rejects a gated stage marked complete without a recorded approval, and old checkpoints are archived. Assets are approved on a scene-by-scene contact sheet showing cost and quality scores. A local board shows what is waiting.<sup><a href="#s7">7</a></sup></li>
+  <li><strong>ViMax:</strong> a Web UI with named projects, storyboard previews and render checkpoints, plus session resume.<sup><a href="#s31">31</a></sup></li>
+  <li><strong>FilmAgent:</strong> each stage can be viewed, edited and regenerated.<sup><a href="#s32">32</a></sup></li>
+  <li><strong>skill-creator:</strong> a review viewer with per-case feedback that saves to <code>feedback.json</code>.<sup><a href="#s10">10</a></sup></li>
+</ul>
+<h4>Claude Code building blocks</h4>
+<ul>
+  <li><strong>Skills:</strong> one skill per stage. <code>disable-model-invocation: true</code> stops Claude from starting a stage on its own; <code>context: fork</code> runs a stage in a subagent; skills can bundle scripts and references.<sup><a href="#s14">14</a></sup></li>
+  <li><strong>Subagents:</strong> separate writer and critic agents, each with preloaded skills, a chosen model, and an optional persistent <code>memory</code> folder.<sup><a href="#s15">15</a></sup></li>
+  <li><strong>Hooks:</strong> <code>UserPromptSubmit</code> and <code>Stop</code> run on every turn and could, for example, prompt "log any [rule] notes" before a turn ends.<sup><a href="#s16">16</a></sup></li>
+  <li><strong>LangGraph, in one line:</strong> <code>interrupt()</code> saves graph state and waits for a human to resume with input.<sup><a href="#s80">80</a></sup> We do not need it, because files and skill stages already give us that pause.</li>
+</ul>
+<h4>Capturing general feedback into skills</h4>
+<ul>
+  <li><strong>skill-creator loop:</strong> draft → run with and without the skill → grade → human review → improve. It warns against over-fitting to a few examples ("skills that can be used a million times").<sup><a href="#s10">10</a></sup></li>
+  <li><strong>Self-improvement skills:</strong> log to <code>.learnings/</code> with status pending, promoted or won't-fix; promotion into CLAUDE.md, AGENTS.md or a skill is manual.<sup><a href="#s81">81</a></sup></li>
+  <li><strong>Skill-improver pattern:</strong> reads saved feedback files and changes <code>SKILL.md</code> only when a pattern repeats across sessions.<sup><a href="#s82">82</a></sup></li>
+</ul>
+</div>
+</details>
+
+<!-- ============ 6. SOURCES ============ -->
+<h2 id="sources">6. Sources</h2>
+<p class="note">Read 14 Nov 2026. Third-party or vendor sources are marked (secondary) or (vendor).</p>
+<ol class="sources">
+<li id="s1"><a href="https://github.com/heygen-com/hyperframes">heygen-com/hyperframes, GitHub</a></li>
+<li id="s2"><a href="https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-cli/SKILL.md">hyperframes-cli SKILL.md</a></li>
+<li id="s3"><a href="https://github.com/heygen-com/hyperframes/blob/main/skills/media-use/SKILL.md">media-use SKILL.md</a></li>
+<li id="s4"><a href="https://www.remotion.dev/docs/ai/skills">Remotion: Agent Skills</a></li>
+<li id="s5"><a href="https://www.remotion.dev/docs/license/pricing">Remotion: License &amp; Pricing</a></li>
+<li id="s6"><a href="https://github.com/remotion-dev/remotion">remotion-dev/remotion, GitHub</a></li>
+<li id="s7"><a href="https://github.com/calesthio/OpenMontage">calesthio/OpenMontage, GitHub (README)</a></li>
+<li id="s8"><a href="https://github.com/heygen-com/skills">heygen-com/skills, GitHub</a></li>
+<li id="s9"><a href="https://github.com/anthropics/skills">anthropics/skills, GitHub</a> (<a href="https://github.com/anthropics/skills/tree/main/skills">skills folder</a>)</li>
+<li id="s10"><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md">skill-creator SKILL.md</a></li>
+<li id="s11"><a href="https://github.com/ComposioHQ/awesome-claude-skills">ComposioHQ/awesome-claude-skills</a></li>
+<li id="s12"><a href="https://learn.chatgpt.com/docs/build-skills">OpenAI Codex: Build skills</a></li>
+<li id="s13"><a href="https://codex.danielvaughan.com/2026/05/05/agent-skills-open-standard-portable-skills-codex-cli-cross-agent/">Agent Skills open standard across tools</a> (secondary)</li>
+<li id="s14"><a href="https://code.claude.com/docs/en/skills">Claude Code docs: Skills</a></li>
+<li id="s15"><a href="https://code.claude.com/docs/en/sub-agents">Claude Code docs: Subagents</a></li>
+<li id="s16"><a href="https://code.claude.com/docs/en/hooks">Claude Code docs: Hooks</a></li>
+<li id="s17"><a href="https://motionbox.io/blog/best-mcp-server-for-video-editing-tools-in-2026">Best MCP servers for video editing 2026</a> (secondary)</li>
+<li id="s18"><a href="https://glama.ai/mcp/servers/KyaniteLabs/kinocut">Kinocut (mcp-video) on Glama</a> (directory)</li>
+<li id="s19"><a href="https://github.com/motion-canvas/motion-canvas">motion-canvas/motion-canvas, GitHub</a></li>
+<li id="s20"><a href="https://github.com/redotvideo/revideo">redotvideo/revideo, GitHub</a></li>
+<li id="s21"><a href="https://www.pkgpulse.com/guides/remotion-vs-motion-canvas-vs-revideo-programmatic-video-2026">Remotion vs Motion Canvas vs Revideo 2026</a> (secondary)</li>
+<li id="s22"><a href="https://github.com/ManimCommunity/manim">ManimCommunity/manim, GitHub</a></li>
+<li id="s23"><a href="https://claudemarketplaces.com/skills/adithya-s-k/manim_skill/manim-composer">manim-composer skill</a>; <a href="https://cdn.jsdelivr.net/gh/yusuke710/manim-skill@main/README.md">yusuke710/manim-skill README</a></li>
+<li id="s24"><a href="https://github.com/diffusionstudio/lottie">diffusionstudio/lottie, GitHub</a></li>
+<li id="s25"><a href="https://lottiefiles.com/blog/working-with-lottie-animations/your-ai-can-now-control-lottie-creator-heres-what-that-actually-means">LottieFiles: Lottie Creator speaks MCP</a> (vendor)</li>
+<li id="s26"><a href="https://rive.app/docs/editor/ai/mcp">Rive docs: MCP</a></li>
+<li id="s27"><a href="https://github.com/a-y-ibrahim/after-effects-mcp">a-y-ibrahim/after-effects-mcp</a></li>
+<li id="s28"><a href="https://github.com/showlab/Paper2Video">showlab/Paper2Video</a>; <a href="https://arxiv.org/abs/2510.05096">arXiv 2510.05096</a></li>
+<li id="s29"><a href="https://github.com/showlab/Code2Video">showlab/Code2Video</a>; <a href="https://arxiv.org/abs/2510.01174">arXiv 2510.01174</a></li>
+<li id="s30"><a href="https://github.com/TIGER-AI-Lab/TheoremExplainAgent">TIGER-AI-Lab/TheoremExplainAgent</a></li>
+<li id="s31"><a href="https://github.com/HKUDS/ViMax">HKUDS/ViMax</a>; <a href="https://arxiv.org/html/2606.07649v1">arXiv 2606.07649</a></li>
+<li id="s32"><a href="https://github.com/HITsz-TMG/FilmAgent">HITsz-TMG/FilmAgent</a></li>
+<li id="s33"><a href="https://github.com/showlab/MovieAgent">showlab/MovieAgent</a></li>
+<li id="s34"><a href="https://github.com/HKUDS/VideoAgent">HKUDS/VideoAgent</a></li>
+<li id="s35"><a href="https://www.b2w.tv/blog/explainer-video-script-template">Explainer video script template</a>; <a href="https://explainify.com/blog/explainer-video-script-that-converts/">Explainify script guide</a>; <a href="https://typecast.ai/learn/?p=14931">Script timing</a> (secondary, practitioner)</li>
+<li id="s36"><a href="https://www.lennysnewsletter.com/p/the-power-of-strategic-narrative">Lenny's Podcast: The power of strategic narrative (Andy Raskin)</a>; <a href="https://www.antoinebuteau.com/lessons-from-andy-raskin/">Lessons from Andy Raskin</a> (secondary)</li>
+<li id="s37"><a href="https://greatdemo.blogspot.com/2017/06">Great Demo! blog (Peter Cohan)</a></li>
+<li id="s38"><a href="https://managementconsulted.com/scqa-framework/">SCQA framework</a>; <a href="https://modelthinkers.com/mental-model/225">Pyramid principle</a> (secondary)</li>
+<li id="s39"><a href="https://wistia.com/library/understanding-audience-retention">Wistia: Understanding audience retention</a>; <a href="https://wistia.com/blog/optimal-video-length">Wistia: optimal video length</a></li>
+<li id="s40"><a href="https://wistia.com/learn/marketing/insights-state-of-video-report">Wistia: 2024 State of Video insights</a></li>
+<li id="s41"><a href="https://github.com/Libr-AI/OpenFactVerification">Libr-AI/OpenFactVerification (Loki)</a>; <a href="https://preview.aclanthology.org/setup/2025.coling-demos.4">COLING 2025 demo paper</a></li>
+<li id="s42"><a href="https://claudskills.com/skills/argument-mapping/">Argument-mapping skill</a>; <a href="https://www.skills.sh/nateberkopec/dotfiles/argument-validator">argument-validator skill</a> (community)</li>
+<li id="s43"><a href="https://playbooks.com/skills/ailabs-393/ai-labs-claude-skills/storyboard-manager">storyboard-manager skill</a>; <a href="https://claudemarketplaces.com/skills/haowjy/creative-writing-skills/cw-story-critique">cw-story-critique skill</a> (community)</li>
+<li id="s44"><a href="https://ai.google.dev/gemini-api/docs/video-understanding">Gemini API: video understanding</a>; <a href="https://discuss.ai.google.dev/t/improve-timestamp-accuracy-on-video-understanding/95356">Forum: timestamp accuracy</a></li>
+<li id="s45"><a href="https://invideo.io/faq/how-do-you-use-ai-to-review-a-rough-cut-for-pacing/">invideo: AI rough-cut review</a> (vendor)</li>
+<li id="s46"><a href="https://github.com/QwenLM/Qwen3-TTS">QwenLM/Qwen3-TTS</a></li>
+<li id="s47"><a href="https://github.com/resemble-ai/chatterbox">resemble-ai/chatterbox</a></li>
+<li id="s48"><a href="https://github.com/SWivid/F5-TTS">SWivid/F5-TTS</a></li>
+<li id="s49"><a href="https://huggingface.co/hexgrad/Kokoro-82M">hexgrad/Kokoro-82M</a></li>
+<li id="s50"><a href="https://rarebuildsoftware.com/blog/best-open-source-voice-cloning-2026">Best open-source voice cloning 2026, 6 tested</a> (secondary; author sells a competing tool)</li>
+<li id="s51"><a href="https://elevenlabs.io/docs/resources/zero-retention-mode">ElevenLabs: Zero Retention Mode</a></li>
+<li id="s52"><a href="https://www.forasoft.com/learn/ai-for-video-engineering/articles-ai/elevenlabs-pricing-voice-cloning-no-fakes-act">ElevenLabs pricing and voice cloning</a> (secondary)</li>
+<li id="s53"><a href="https://docs.cartesia.ai/enterprise/zero-data-retention">Cartesia: Zero Data Retention</a>; <a href="https://www.cartesia.ai/sonic">Cartesia Sonic</a> (vendor)</li>
+<li id="s54"><a href="https://artificialanalysis.ai/text-to-speech/leaderboard">Artificial Analysis: Speech Arena leaderboard</a>; <a href="https://www.digitalapplied.com/blog/best-text-to-speech-models-september-2026-ranked-priced">Sept 2026 snapshot</a> (secondary)</li>
+<li id="s55"><a href="https://github.com/nyrahealth/CrisperWhisper">nyrahealth/CrisperWhisper</a></li>
+<li id="s56"><a href="https://github.com/WyattBlue/auto-editor">WyattBlue/auto-editor</a></li>
+<li id="s57"><a href="https://github.com/Rikorose/DeepFilterNet">Rikorose/DeepFilterNet</a></li>
+<li id="s58"><a href="https://www.descript.com/pricing-new">Descript pricing</a>; <a href="https://sonix.ai/resources/descript-review-pricing/">Descript review 2026</a> (secondary)</li>
+<li id="s59"><a href="https://www.izotope.com/en/learn/tips-to-record-professional-quality-voice-over-at-home.html">iZotope: record voice-over at home</a>; <a href="https://www.sweetwater.com/insync/11-tips-better-voice-recording/">Sweetwater: voice recording tips</a></li>
+<li id="s60"><a href="https://github.com/DanielSWolf/rhubarb-lip-sync">DanielSWolf/rhubarb-lip-sync</a></li>
+<li id="s61"><a href="https://github.com/TMElyralab/MuseTalk">TMElyralab/MuseTalk</a>; <a href="https://www.creativeainews.com/articles/open-source-lip-sync-licenses-commercial-use-2026/">Open-source lip-sync licences 2026</a> (secondary)</li>
+<li id="s62"><a href="https://musicbusinessworldwide.com/eleven-music-new-ai-rival-to-suno-launches-with-merlin-kobalt-licensing-deals-in-the-bag">Music Business Worldwide: Eleven Music launch</a></li>
+<li id="s63"><a href="https://blog.dubspot.com/ai-music-licensing-explained-2026">AI music licensing explained 2026</a> (secondary); <a href="https://billboard.com/pro/suno-warner-music-sign-ai-licensing-deal-settle-lawsuit/">Billboard: Suno and Warner deal</a></li>
+<li id="s64"><a href="https://github.com/ace-step/ACE-Step-1.5">ace-step/ACE-Step-1.5</a></li>
+<li id="s65"><a href="https://huggingface.co/stabilityai/stable-audio-open-1.0">stabilityai/stable-audio-open-1.0</a></li>
+<li id="s66"><a href="https://github.com/hkchengrex/MMAudio">hkchengrex/MMAudio</a></li>
+<li id="s67"><a href="https://elevenlabs.io/docs/capabilities/sound-effects">ElevenLabs docs: Sound effects</a></li>
+<li id="s68"><a href="https://rekkerd.org/sonniss-releases-gdc-2026-game-audio-bundle/">Sonniss GDC 2026 bundle</a>; <a href="https://gamefromscratch.com/sonniss-27-5gb-sound-effect-giveaway-at-gdc-2024/">GDC 2024 bundle terms</a> (secondary)</li>
+<li id="s69"><a href="https://www.freevisuals.net/post/artlist-vs-epidemic-sound-2026-the-definitive-guide-for-video-creators">Artlist vs Epidemic Sound 2026</a> (secondary)</li>
+<li id="s70"><a href="https://ffmpeg.org/ffmpeg-filters.html#sidechaincompress">FFmpeg filters: sidechaincompress</a>; <a href="https://ffmpeg.org/ffmpeg-filters.html#loudnorm">loudnorm</a></li>
+<li id="s71"><a href="https://huggingface.co/Qwen/Qwen-Image-Edit-2511">Qwen/Qwen-Image-Edit-2511</a>; <a href="https://invideo.io/blog/qwen-image-ai-generator/">Qwen Image variants (Aug 2026)</a> (secondary)</li>
+<li id="s72"><a href="https://developers.googleblog.com/introducing-gemini-2-5-flash-image/">Google: Gemini 2.5 Flash Image</a>; <a href="https://petapixel.com/2026/03/03/google-rolls-out-pro-ai-image-features-for-everyone-in-nano-banana-2-update/">PetaPixel: Nano Banana 2</a>; <a href="https://docs.krea.ai/user-guide/features/nano-banana-2.md">Krea docs: Nano Banana 2</a></li>
+<li id="s73"><a href="https://github.com/dembrandt/dembrandt">dembrandt/dembrandt</a></li>
+<li id="s74"><a href="https://github.com/danielgatis/rembg">danielgatis/rembg</a></li>
+<li id="s75"><a href="https://github.com/upscayl/upscayl">upscayl/upscayl</a>; <a href="https://www.aixploria.com/en/upscayl/">Upscayl overview</a> (secondary)</li>
+<li id="s76"><a href="https://www.pexels.com/license/">Pexels licence</a></li>
+<li id="s77"><a href="https://the-decoder.com/openai-sets-two-stage-sora-shutdown-with-app-closing-april-2026-and-api-following-in-september/">The Decoder: two-stage Sora shutdown</a>; <a href="https://www.axios.com/2026/03/24/openai-discontinue-sora-video-app">Axios</a></li>
+<li id="s78"><a href="https://dev.to/tekmag/veo-31-vs-runway-gen-45-vs-kling-30-best-ai-video-generator-compared-2026-14bl">Veo 3.1 vs Runway Gen-4.5 vs Kling 3.0</a> (secondary)</li>
+<li id="s79"><a href="https://www.iab.com/insights/the-ai-ad-gap-widens/">IAB: The AI ad gap widens</a>; <a href="https://mediacat.uk/ai-disclosure-when-it-does-and-doesnt-hurt-brands/amp/">MediaCat: AI disclosure</a> (secondary)</li>
+<li id="s80"><a href="https://docs.langchain.com/oss/javascript/langgraph/interrupts">LangGraph: Interrupts</a></li>
+<li id="s81"><a href="https://tessl.io/registry/skills/github/pskoett/pskoett-ai-skills/self-improvement">pskoett self-improvement skill</a>; <a href="https://skills.sh/trtmn/agent-skills/self-improvement">trtmn self-improvement</a> (community)</li>
+<li id="s82"><a href="https://skillselion.com/skills/sunnypatneedi/claude-starter-kit/skill-improver">skill-improver skill</a> (community)</li>
+<li id="s83"><a href="https://claudemarketplaces.com/skills/sundial-org/awesome-openclaw-skills/ffmpeg-video-editor">ffmpeg-video-editor skill</a> (directory)</li>
+<li id="s84"><a href="https://dev.to/creeta/openmontage-has-45k-stars-and-no-proprietary-orchestrator-437i">OpenMontage write-up</a>; <a href="https://themenonlab.blog/blog/openmontage-open-source-agentic-video-production">OpenMontage overview</a> (secondary)</li>
+<li id="s85"><a href="https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-registry/SKILL.md">hyperframes-registry SKILL.md</a></li>
+</ol>
+
+<p class="meta">Prepared 14 Nov 2026. Web research only; nothing was installed or run. Star counts change daily; licences are as stated on each project page on that date. Check a licence again before commercial use.</p>
+</main>
+</body>
+</html>
